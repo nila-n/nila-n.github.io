@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -9,7 +8,7 @@
         <title>Nila Narayan - Fast Robots</title>
         <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
@@ -22,116 +21,108 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
             <a class="navbar-brand js-scroll-trigger" href="#page-top">
                 <span class="d-block d-lg-none">Nila Narayan</span>
-                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="assets/profile.jpg" alt="..." /></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1.html" style="color: rgb(255, 255, 255);">Lab 1</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2</a></li>
                 </ul>
             </div>
         </nav>
-
-        <!-- Page Content-->
-        <div class="container-fluid p-0">
-            <!-- About-->
-            <section class="resume-section" id="about">
-
-                <div class="resume-section-content">
-                    <h1 class="mb-0">
-                        Lab 1:
-                        <span class="text-primary">Artemis</span>
-                    </h1>
-
-                    <p class="mb-5">The goal of lab 1 was to setup and familiarize myself with the Sparkfun Artemis board, which will be used for the entire duration of the course and handle all robot to robot-master (me!) communication.</p>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 1 <span class="text-primary">Artemis</span></h2>
+            <p class="mb-5">
+                The goal of lab 1 was to setup and familiarize myself with the Sparkfun Artemis board, which will be used for the entire duration of the course and handle all robot to robot-master (me!) communication.
+            </p>
+             
+            <!--Prelab-->
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Prelab</h3>
+                    <p>
+                        First, I installed the latest version of the Arduino IDE, 2.2.1. From there, I was able to install the necessary libraries to work with the Artemis Nano, and get started on the tasks at hand.
+                    </p>
                 </div>
+            </div>
 
-                 <!--PreLab-->
-                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-
-                <h4>Prelab</h4>
-
-                <p class="mb-5">To start the lab, all I needed to do was install the latest Arduiono IDE, Version 2.2.1. From there, I installed the necessary libraries to use the Artemis board.</p>
-
+            <!--Tasks-->
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Task 1: Blink</h3>
+                    <iframe width="560" height="315" src="https://youtube.com/embed/shorts/rXsUr__LDVg?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                    <p>Following the lab instructions, I first tested the new board by running the Blink.io file. 
+                    </p>
                 </div>
+            </div>
 
-                <!--Tasks-->
-                <h4>Tasks</h4>
-                
-                <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                    <!--Blink-->
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Task 1: Blink</h3>
-                        <iframe width="560" height="315" src="https://youtube.com/embed/shorts/rXsUr__LDVg?si=Zl8L1p1u1phXd7-i"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen></iframe>
-                        <p>
-                            Following the lab instructions, I first tested the new board by running the Blink.io file. 
-                        </p>
-                    </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Task 2: Serial</h3>
+                    <iframe width="560" height="315" src="https://youtube.com/embed/shorts/wvvAw_ZC5C0?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                    <p>Next, I tested serial communication using the example file. It will be important for future debugging to be able to use serial communication to send and receive information. This was used to test the UART communication between the board and the computer.
+                        However, in order to get the messages in a readable format, I needed to change my baud rate to 115200.
+                    </p>
                 </div>
+            </div>
 
-                    <!--Serial-->
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Task 2: Serial Communication</h3>
-                            <iframe width="560" height="315" src="https://youtube.com/embed/shorts/wvvAw_ZC5C0"
-                                title="YouTube video player" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen></iframe>
-                            <p>
-                                Next, I tested serial communication using the example file. It will be important for future debugging to be able to use serial communication to send and receive information. 
-                            </p>
-                        </div>
-                    </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Task 3: Temperature and Analog Read</h3>
+                    <iframe width="560" height="315" src="https://youtube.com/embed/shorts/eLpUee8MtFo?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                    <p>
+                        The Artemis Nano has an onboard analog to digital converter (ADC) which converts voltage to a digital signal.
+                        Using the AnalogRead() function, we can recieve data from the temperature sensor. 
 
-                    <!--Temp-->
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Task 3: Temperature Sensor Test</h3>
-                            <iframe width="560" height="315" src="https://youtube.com/embed/shorts/eLpUee8MtFo"
-                                title="YouTube video player" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen></iframe>
-                            <p>
-                                Next, I tested the onboard temperature sensor. Readings indicated the ambient temperature of the room to be around 32000 units. When I put my hand on the sensor, this increased to about 32500, indicating that the sensor was able to detect the environmental change. 
-                            </p>
-                        </div>
-                    </div>
-
-                    <!--Mic-->
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Task 4: Microphone Test</h3>
-                            <iframe width="560" height="315" src="https://youtube.com/embed/shorts/vUtUUHgXaZY"
-                                title="YouTube video player" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen></iframe>
-                            <p>
-                                Finally, I tested the onboard microphone. Using an online keyboard, I played different notes to see how well the microphone could detect the different frequencies. A clear different was seen between each note! 
-                            </p>
-                        </div>
-                    </div>
+                        The ambient temperature of the room seemed to be roughly 32000 units. When I cupped the board in my hand, this increased to around 32500, as seen in the video below.
+                        This means that the temperature sensor successfully detected the change and the AnalogRead() function allowed the microcontroller to process the data.
+                    
                 </div>
+            </div>
 
-                        <!--Discussion-->
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Task 4: Microphone</h3>
+                    <iframe width="560" height="315" src="https://youtube.com/embed/shorts/vUtUUHgXaZY?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                    <p> Lastly, I tested the onboard microphone on the Artemis Nano. The microphone outputs the frequency of audio using PDM,
+                        or pulse-density-modulation. In the video, I use an online piano app to play various notes and record the change in frequency via
+                        the serial monitor. The sensor was able to clearly pickup each note!
+                    </p>
+                </div>
+            </div>
 
-                        <h4>Discussion</h4>
-
-                        <p class="mb-5">Ultimately, this lab helped me familiarize myself with the microcontroller we will be using to control our robot. As someone less experienced with CS, I am glad to have had this lab to experiment on a small scale with the Artemis before having to use it on the robot later on.</p>
-
-                    </div>
-                
-                </section>
-
-            
+            <!--Discussion-->
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Discussion</h3>
+                    <p> Ultimately, this lab helped me familiarize myself with the microcontroller we will be using to control our robot.
+                        As someone less experienced with CS, I am glad to have had this lab to experiment on a small scale with the Artemis before having to use it on the robot later on.
+                    </p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
 </html>
