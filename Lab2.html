@@ -26,59 +26,116 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1.html">Lab 1</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 1: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1.html" style="color: rgb(255, 255, 255);">Lab 2: Bluetooth</a></li>
                 </ul>
             </div>
         </nav>
     <!-- Page Content-->
     <section class="resume-section" id="experience">
         <div class="resume-section-content">
-            <h2 class="mb-2">Lab 2 <span class="text-primary">Bluetooth Communication</span></h2>
-            <p class="mb-5">The purpose of this lab was to 
+            <h2 class="mb-2">Lab 2 <span class="text-primary">Bluetooth</span></h2>
+            <p class="mb-5">The purpose of this lab was to setup bluetooth communication in order to communicate with the Artemis wirelessly in the future.
+                This is especially important for debugging. In this lab, Jupyter Lab and Arduino were used in tandem to establish a bluetooth connection.
             </p>
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
+                    <h3>Prelab</h3>
+                    <p>
+                        To start the lab, I needed to create a virtual environment. 
+                        As I already had the latest version of python, I just had to install pip and create my virtual environment from there.
+                        Then, I installed the codebase which would allow me to use ArduinoBLE. BLE, or "Bluetooth Low Energy" is a version of Bluetooth
+                        optimized for situations that don't require large sets of data transfer. The file ble_arduino.ino was the main file being used in this
+                        lab on the Artemis side. On the computer side, Jupyter Notebooks was used. For the virtual environment setup, I used the following code:
+                        <code>
+                            python3 -m pip install --user virtualenv
+                            python3 -m venv FastRobots_ble
+                        </code>
+                        From there, I created a folder in my computer where all my Fast Robots code, and the fast robots environment would be kept, and then activated it.
+                        After this, I opened Juputer Lab.
+                        <code>
+                            > .\FastRobots_ble\Scripts\activate
+                            > jupyter lab
+                        </code>   
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    
+                    <h3>Configuration</h3>
+                    <p>
+                        In order to establish a bluetooth connection, I needed to know my device's MAC address. I did this by having it print to the serial monitor.
+                        Alongside this, I generated a UUID, or Unique Universal Identifier for my specific board such that I wouldn't connect to another student's board
+                        by mistake. All the info was added to the connections.yaml file in the demo codebase.
+                        <code>
+                            artemis_address: 'c0:89:94:6d:0e:4b'
+
+                            #ble_service: '9a48ecba-2e92-082f-c079-9e75aae428b1'
+                            ble_service: 'bc858ca3-5aad-4049-8c76-20d773b07cd9'
+
+                            characteristics:
+                            TX_CMD_STRING: '9750f60b-9c9c-4158-b620-02ec9521cd99'
+
+                            RX_FLOAT: '27616294-3063-4ecc-b60b-3470ddef2938'
+                            RX_STRING: 'f235a225-6735-4d73-94cb-ee5dfce9ba83'
+                        </code>
+                        Initially, I had a lot of trouble connecting to bluetooth. However, it was as simple as adding an extra
+                        character to my artemis_address. The serial monitor had printed c0:89:94:6d:e:6b. However, the python script needed 12 characters,
+                        so I added a 0 to get an equivalent 12 character MAC address.
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    
+                    <h3>Tasks</h3>
+                    <h3>Echo</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    
+                    <h3>Get_Time_Millis</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    
+                    <h3>Notification Handler</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    
+                    <h3>Live-Sending Time Data</h3>
                 </div>
             </div>
 
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    
+                    Sending Time Data with Arrays
                 </div>
             </div>
 
-            
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    Sending Time and Temperature Data with an Array
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    Advantages and Disadvantages of Each Method
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    Discussion
+                </div>
+            </div>
 
         </div>
     </section>
