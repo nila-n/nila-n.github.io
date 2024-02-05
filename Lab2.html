@@ -287,7 +287,6 @@
                             }
                         </code>
                     </pre>
-                    <p>On the Python side:</p>
                     <p>
                         On the Python side:
                         <img src="images/Lab2/SendTimeData1.png" alt = "Time Data Loop" width=90% />
@@ -373,12 +372,40 @@
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Advantages and Disadvantages of Each Method</h3>
+                    <p>
+                        Each method of sending data has its own pros and cons. The first method of sending datapoints
+                        live is very "quick" in the moment. For very short operations it may be beneficial to be able to
+                        watch the measurements live, especially in a case where debugging is needed. However, this method
+                        essentially clips the data, because the bluetooth connections can only send datapoints so fast. For
+                        steady state cases, say if the robot is just driving straight without turns, this does not matter much.
+                        However for complex motions this data clipping is a disadvantage.
+                    </p>
+                    <p>
+                        In comparison, the array method of sending data was incredibly fast. I was able to store at a rate faster 
+                        than one timestamp per second, implying a very fast data transfer rate. In addition to this, it was very fast to
+                        send and process the data array using the notification handler. It would be useful to collect data this way
+                        for something like a stunt, and be able to process the success of an operation after it is completed and be able to
+                        optimize it from there.
+                    </p>
+                    <p>
+                        This begs the question of, when will the Artemis literally run out of data? The Artemis has 384 kB of RAM. If every
+                        float takes up 4 bytes of RAM, then 96,000 datapoints can be stored before memory runs out. If we are recording
+                        both time and temperature, this is 48,000 datapoints per measurement. However, each string also takes up a certain number of
+                        bytes per character. This means even less data can be sent to the notification handler before storage runs out.
+                        In comparison, sampling at a specific frequency could be much faster. If we transmit 16-bit pieces of data at a rate of
+                        150 Hz, then over 6 seconds, 1500 bytes will be used. Dividing 384 kb by 1500 means 256 5 second intervals of data can be
+                        sent before storage runs out!
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Discussion</h3>
+                    <p>Bluetooth communication will be extremely useful in future labs for communication between the bot and
+                        my computer. I imagine this will be useful for feedback loops, for example. This lab also made me more 
+                        comfortable with Jupyter Labs.
+                    </p>
                 </div>
             </div>
 
