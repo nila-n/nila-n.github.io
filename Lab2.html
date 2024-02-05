@@ -47,16 +47,20 @@
                         Then, I installed the codebase which would allow me to use ArduinoBLE. BLE, or "Bluetooth Low Energy" is a version of Bluetooth
                         optimized for situations that don't require large sets of data transfer. The file ble_arduino.ino was the main file being used in this
                         lab on the Artemis side. On the computer side, Jupyter Notebooks was used. For the virtual environment setup, I used the following code:
-                        <code>
-                            python3 -m pip install --user virtualenv
-                            python3 -m venv FastRobots_ble
-                        </code>
+                        <pre>
+                            <code>
+                                python3 -m pip install --user virtualenv
+                                python3 -m venv FastRobots_ble
+                            </code>
+                        </pre>
                         From there, I created a folder in my computer where all my Fast Robots code, and the fast robots environment would be kept, and then activated it.
                         After this, I opened Juputer Lab.
-                        <code>
-                            > .\FastRobots_ble\Scripts\activate
-                            > jupyter lab
-                        </code>   
+                        <pre>
+                            <code>
+                                > .\FastRobots_ble\Scripts\activate
+                                > jupyter lab
+                            </code> 
+                        </pre>  
                     </p>
                 </div>
             </div>
@@ -68,18 +72,20 @@
                         In order to establish a bluetooth connection, I needed to know my device's MAC address. I did this by having it print to the serial monitor.
                         Alongside this, I generated a UUID, or Unique Universal Identifier for my specific board such that I wouldn't connect to another student's board
                         by mistake. All the info was added to the connections.yaml file in the demo codebase.
-                        <code>
-                            artemis_address: 'c0:89:94:6d:0e:4b'
-
-                            #ble_service: '9a48ecba-2e92-082f-c079-9e75aae428b1'
-                            ble_service: 'bc858ca3-5aad-4049-8c76-20d773b07cd9'
-
-                            characteristics:
-                            TX_CMD_STRING: '9750f60b-9c9c-4158-b620-02ec9521cd99'
-
-                            RX_FLOAT: '27616294-3063-4ecc-b60b-3470ddef2938'
-                            RX_STRING: 'f235a225-6735-4d73-94cb-ee5dfce9ba83'
-                        </code>
+                        <pre>
+                            <code>
+                                artemis_address: 'c0:89:94:6d:0e:4b'
+    
+                                #ble_service: '9a48ecba-2e92-082f-c079-9e75aae428b1'
+                                ble_service: 'bc858ca3-5aad-4049-8c76-20d773b07cd9'
+    
+                                characteristics:
+                                TX_CMD_STRING: '9750f60b-9c9c-4158-b620-02ec9521cd99'
+    
+                                RX_FLOAT: '27616294-3063-4ecc-b60b-3470ddef2938'
+                                RX_STRING: 'f235a225-6735-4d73-94cb-ee5dfce9ba83'
+                            </code>
+                        </pre>
                         Initially, I had a lot of trouble connecting to bluetooth. However, it was as simple as adding an extra
                         character to my artemis_address. The serial monitor had printed c0:89:94:6d:e:6b. However, the python script needed 12 characters,
                         so I added a 0 to get an equivalent 12 character MAC address.
@@ -115,25 +121,25 @@
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    Sending Time Data with Arrays
+                    <h3>Sending Time Data with Arrays</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    Sending Time and Temperature Data with an Array
+                    <h3>Sending Time and Temperature Data with an Array</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    Advantages and Disadvantages of Each Method
+                    <h3>Advantages and Disadvantages of Each Method</h3>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    Discussion
+                    <h3>Discussion</h3>
                 </div>
             </div>
 
