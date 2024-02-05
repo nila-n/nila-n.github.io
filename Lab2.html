@@ -119,9 +119,9 @@
                             </code>
                         </pre>
 
-                        On the python side, the results:
+                        <p>On the python side, the results:</p>
                         <p>
-                            <img src="images/Lab2/Echo_Python.png" alt = "Echo Results" width=100% />
+                            <img src="images/Lab2/Echo_Python.png" alt = "Echo Results" width=90% />
                         </p>
 
                     </p>
@@ -131,6 +131,35 @@
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Get_Time_Millis</h3>
+                    <p>
+                        Next, I used the onboard timer to track and send time stamps through the bluetooth connection.
+                        This would be done a variety of ways throughout the lab, however to start I just sent a single timestamp
+                        by creating a command GET_TIME_MILLIS.
+                    </p>
+                    <p>
+                        On the Arduino side:
+                    </p>
+                    <pre>
+                        <code>
+                            case GET_TIME_MILLIS:
+
+                                tx_estring_value.clear();
+                                tx_estring_value.append("T: ");
+                                tx_estring_value.append((float) millis());
+                                tx_characteristic_string.writeValue(tx_estring_value.c_str());
+
+                                Serial.println("Sent time");
+
+                                break;
+                        </code>
+                    </pre>
+                    <p>
+                        On the python side:
+                    </p>
+                    <p>
+                        <img src="images/Lab2/GetTimeMillis_Python.png" alt = "Get Time Millis Results" width=90% />
+                    </p>
+
                 </div>
             </div>
 
