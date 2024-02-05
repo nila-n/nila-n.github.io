@@ -166,6 +166,10 @@
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Notification Handler</h3>
+                    <p>
+                        Next, I set up a notification handler in order to receive strings and extract necessary data from them.
+                        In its original form, the notification handler only consistent of the print line now contained within the else statement.
+                    </p>
                     <pre>
                         <code>
                             def notif_handler(uuid, notif):
@@ -181,12 +185,53 @@
                                     print(s + " is the current time.")
                         </code>
                     </pre>
+
+                    <p>
+                        In later parts of the lab, the notification handler is used to handle large sets of data at once
+                        by storing them in an array on the Arduino side and then handling that array in the python notif_handler function.
+                    </p>
+
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Live-Sending Time Data</h3>
+                    <p> Before implementing an array to send data, I first wrote a loop which connects timestamps over 5 seconds, and sends them back over bluetooth immediately.
+                        I added a sample number to each timestamp in order to track the rate at which messages were sent. In the end, 155 timestamps were sent by the Arduino in 5 seconds,
+                        implying a rate of about 31 messages/second
+                    </p>
+                    <p>
+                        On the Arduino side:
+                        <pre>
+                            <code>
+                                case TIME_DATA_LOOP:
+                                    {
+                                    int count = 0;
+                                    unsigned long startT = millis();
+                                    while (millis() - startT < 5000) {
+                                        
+                                        tx_estring_value.clear();
+                                        tx_estring_value.append("Sample ");
+                                        tx_estring_value.append(count);
+                                        tx_estring_value.append(": ");
+                                        tx_estring_value.append((float) millis());
+                                        tx_characteristic_string.writeValue(tx_estring_value.c_str());
+                                        count++;
+
+                                    }
+
+                                    Serial.println("Sent time many times");
+
+                                    break;
+                                    }
+                            </code>
+                        </pre>
+                    </p>
+                    <p>
+                        On the Python side:
+                        <img src="images/Lab2/Time_Data_Loop.png" alt = "Time Data Loop" width=90% />
+                    </p>
                 </div>
             </div>
 
