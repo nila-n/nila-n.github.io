@@ -199,7 +199,7 @@
                     <h3>Live-Sending Time Data</h3>
                     <p> Before implementing an array to send data, I first wrote a loop which connects timestamps over 5 seconds, and sends them back over bluetooth immediately.
                         I added a sample number to each timestamp in order to track the rate at which messages were sent. In the end, 155 timestamps were sent by the Arduino in 5 seconds,
-                        implying a rate of about 31 messages/second
+                        implying a rate of about 31 messages/second.
                     </p>
                     <p>
                         On the Arduino side:
@@ -239,12 +239,134 @@
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Sending Time Data with Arrays</h3>
+                    <p>
+                        Next, I established a global array which would be used to store timestamps over 5 seconds.
+                        Rather than send this data to over bluetooth live, instead a full dataset was collected for 5 seconds and 
+                        essentially sent in bulk.
+                        Initially, I created an array with 5000 indexes, or one message per second. Upon actually running the loop, this array 
+                        filled up very quickly, meaning messages could be stored much faster than that. Only 1 or 2 of the 5 seconds were even recorded.
+                        In future iterations, specifically when temperature and time were sent at the same time, I added a delay to remedy this.
+                    </p>
+                    <p>On the Arduino side:</p>
+                    <pre>
+                        <code>
+                            case SEND_TIME_DATA:
+                            {
+                            int i = 0;
+                            unsigned long startT = millis();
+
+                            //Build the Array
+                            while ((millis() - startT < 500) && (i < data_array_size)) {
+                                
+                                time_data[i] = (int) millis();
+                                i++;
+
+                                if(i == data_array_size-1)
+                                Serial.println("Youch! Out of memory!");
+                                
+                            }
+
+                            //Send back the array
+                            for (int j = 0; j < data_array_size; j++) {
+
+                                if(time_data[j] == 0)
+                                break;
+
+                                tx_estring_value.clear();
+                                tx_estring_value.append("Sample ");
+                                tx_estring_value.append(j);
+                                tx_estring_value.append(": ");
+                                tx_estring_value.append(time_data[j]);
+                                tx_characteristic_string.writeValue(tx_estring_value.c_str());
+
+                            }
+
+                            Serial.println("Sent time many times");
+
+                            break;
+                            }
+                        </code>
+                    </pre>
+                    <p>On the Python side:</p>
+                    <p>
+                        On the Python side:
+                        <img src="images/Lab2/SendTimeData1.png" alt = "Time Data Loop" width=90% />
+                        <img src="images/Lab2/SendTimeData2.png" alt = "Time Data Loop" width=90% />
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Sending Time and Temperature Data with an Array</h3>
+                    <p>
+                        Similar to the previous task, I now was sending time and temperature data simultaneously. Each was stored in a separate global array.
+                        These global arrays were stored at the very top of the ble_arduino.ino function, such that any case would be able to access them.
+
+                        <img src="images/Lab2/globalArrays.png" alt = "Global Arrays" width=90% />
+                    </p>
+
+                    <p>
+                        In order to actually record data over 5 seconds, I needed to introduce a delay to my data collection.
+                        With no delay, 1000 data points were filled up in under a second, though the exact time is unknown.
+                        When I added a delay of 20 ms between every collected data point, only 250 data points were needed to capture 5 seconds,
+                        meaning 50 datapoints a second.
+                    </p>
+
+                    <p>
+                        On the Arduino Side:
+                        <pre>
+                            <code>
+                                case GET_TEMP_READINGS:
+                                {
+
+                                int i = 0;
+                                unsigned long startT = millis();
+
+                                //Build the Array
+                                while ((millis() - startT < 5000) && (i < data_array_size)) {
+                                    
+                                    time_data[i] = (int) millis();
+                                    temp_data[i] = (int) getTempDegF();
+
+                                    //Add a buffer
+                                    delay(20);
+
+                                    if(i == data_array_size-1)
+                                    Serial.println("Youch! Out of memory!");
+
+                                    i++;
+                                    
+                                }
+
+                                //Send back the array
+                                for (int j = 0; j < data_array_size; j++) {
+
+                                    if(time_data[j] == 0 || temp_data[j] == 0.0)
+                                    break;
+
+                                    tx_estring_value.clear();
+                                    tx_estring_value.append(j);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(time_data[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(temp_data[j]);
+                                    tx_characteristic_string.writeValue(tx_estring_value.c_str());
+
+                                }
+
+                                Serial.println("Sent time many times");
+
+                                break;
+                                }
+                            </code>
+                        </pre>
+                        It is also worth noting that in all these commands, I had the serial monitor print when it was done.
+                    </p>
+                    <p>
+                        On the Python side:
+                        <img src="images/Lab2/TimeandTemp1.png" alt = "Global Arrays" width=90% />
+                    </p>
                 </div>
             </div>
 
