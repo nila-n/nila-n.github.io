@@ -26,385 +26,321 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1.html">Lab 1: Artemis</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html" style="color: rgb(255, 255, 255);">Lab 2: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html" style="color: rgb(255, 255, 255);">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html" style="color: rgb(255, 255, 255);">Lab 2: IMU</a></li>
                 </ul>
             </div>
         </nav>
     <!-- Page Content-->
     <section class="resume-section" id="experience">
         <div class="resume-section-content">
-            <h2 class="mb-2">Lab 2 <span class="text-primary">Bluetooth</span></h2>
-            <p class="mb-5">The purpose of this lab was to setup bluetooth communication in order to communicate with the Artemis wirelessly in the future.
-                This is especially important for debugging. In this lab, Jupyter Lab and Arduino were used in tandem to establish a bluetooth connection.
+            <h2 class="mb-2">Lab 2 <span class="text-primary">IMU</span></h2>
+            <p class="mb-5">The purpose of this lab was to test the IMU sensor. The IMU has an accelerometer, gyroscope, and magnetometer, but we primarily focused
+                on tuning and fusing the first two. We also recieved our actual robots in this lab and took them for a spin.
             </p>
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Prelab</h3>
                     <p>
-                        To start the lab, I needed to create a virtual environment. 
-                        As I already had the latest version of python, I just had to install pip and create my virtual environment from there.
-                        Then, I installed the codebase which would allow me to use ArduinoBLE. BLE, or "Bluetooth Low Energy" is a version of Bluetooth
-                        optimized for situations that don't require large sets of data transfer. The file ble_arduino.ino was the main file being used in this
-                        lab on the Artemis side. On the computer side, Jupyter Notebooks was used. For the virtual environment setup, I used the following code:
+                        To start the lab, I just directly connected my IMU to the Artemis, and ran example code.
+                        Since the ADR jumper was not closed, I needed to set ADO-0 equal to 1
+                        The serial plotter was helpful in visualizing the data.
+
+                        <!--add video!!-->
+
+                        After this, I also added in code to have the LED on the Artemis blink once the gyroscope had been
+                        initialized. This was included within the void setup() function on the Arduino side.
                         <pre>
                             <code>
-                                python3 -m pip install --user virtualenv
-                                python3 -m venv FastRobots_ble
-                            </code>
-                        </pre>
-                        From there, I created a folder in my computer where all my Fast Robots code, and the fast robots environment would be kept, and then activated it.
-                        After this, I opened Juputer Lab.
-                        <pre>
-                            <code>
-                                > .\FastRobots_ble\Scripts\activate
-                                > jupyter lab
-                            </code> 
-                        </pre>  
-                    </p>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Configuration</h3>
-                    <p>
-                        In order to establish a bluetooth connection, I needed to know my device's MAC address. I did this by having it print to the serial monitor.
-                        Alongside this, I generated a UUID, or Unique Universal Identifier for my specific board such that I wouldn't connect to another student's board
-                        by mistake. All the info was added to the connections.yaml file in the demo codebase.
-                        <pre>
-                            <code>
-                                artemis_address: 'c0:89:94:6d:0e:4b'
-    
-                                #ble_service: '9a48ecba-2e92-082f-c079-9e75aae428b1'
-                                ble_service: 'bc858ca3-5aad-4049-8c76-20d773b07cd9'
-    
-                                characteristics:
-                                TX_CMD_STRING: '9750f60b-9c9c-4158-b620-02ec9521cd99'
-    
-                                RX_FLOAT: '27616294-3063-4ecc-b60b-3470ddef2938'
-                                RX_STRING: 'f235a225-6735-4d73-94cb-ee5dfce9ba83'
-                            </code>
-                        </pre>
-                        Initially, I had a lot of trouble connecting to bluetooth. However, it was as simple as adding an extra
-                        character to my artemis_address. The serial monitor had printed c0:89:94:6d:e:6b. However, the python script needed 12 characters,
-                        so I added a 0 to get an equivalent 12 character MAC address.
-                    </p>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Tasks</h3>
-                    <h3>Echo</h3>
-                    <p>
-                        It is important for the Artemis Board to be able to send and modify strings. In order to configure this, I created a function ECHO.
-                        On the Arduino side, this consisted of adding a prefix to the message to say "Robot says ->" followed by the original message.
-
-                        <pre>
-                            <code>
-                                char char_arr[MAX_MSG_SIZE];
-
-                                // Extract the next value from the command string as a character array
-                                success = robot_cmd.get_next_value(char_arr);
-                                if (!success)
-                                    return;
-                                
-                                tx_estring_value.clear();
-                                tx_estring_value.append("Robot Says -> ");
-                                tx_estring_value.append(char_arr);
-                                tx_characteristic_string.writeValue(tx_estring_value.c_str());
-                                
-                                break;
-                            </code>
-                        </pre>
-
-                        <p>On the python side, the results:</p>
-                        <p>
-                            <img src="images/Lab2/Echo_Python.png" alt = "Echo Results" width=90% />
-                        </p>
-
-                    </p>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Get_Time_Millis</h3>
-                    <p>
-                        Next, I used the onboard timer to track and send time stamps through the bluetooth connection.
-                        This would be done a variety of ways throughout the lab, however to start I just sent a single timestamp
-                        by creating a command GET_TIME_MILLIS.
-                    </p>
-                    <p>
-                        On the Arduino side:
-                    </p>
-                    <pre>
-                        <code>
-                            case GET_TIME_MILLIS:
-
-                                tx_estring_value.clear();
-                                tx_estring_value.append("T: ");
-                                tx_estring_value.append((float) millis());
-                                tx_characteristic_string.writeValue(tx_estring_value.c_str());
-
-                                Serial.println("Sent time");
-
-                                break;
-                        </code>
-                    </pre>
-                    <p>
-                        On the python side:
-                    </p>
-                    <p>
-                        <img src="images/Lab2/GetTimeMillis_Python.png" alt = "Get Time Millis Results" width=90% />
-                    </p>
-
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Notification Handler</h3>
-                    <p>
-                        Next, I set up a notification handler in order to receive strings and extract necessary data from them.
-                        In its original form, the notification handler only consistent of the print line now contained within the else statement.
-                    </p>
-                    <pre>
-                        <code>
-                            def notif_handler(uuid, notif):
-                                s = ble.bytearray_to_string(notif)
-
-                                #Contains Temp Readings
-                                if("|" in s):
-                                    sep_notif = s.split(" | ")
-                                    print(sep_notif[0] + ": " + sep_notif[1] + " is the current time and " + sep_notif[2] + " is the current temp in Fahrenheit.")
-                                
-                                #Does not contain temp readings
-                                else:
-                                    print(s + " is the current time.")
-                        </code>
-                    </pre>
-
-                    <p>
-                        In later parts of the lab, the notification handler is used to handle large sets of data at once
-                        by storing them in an array on the Arduino side and then handling that array in the python notif_handler function.
-                    </p>
-
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Live-Sending Time Data</h3>
-                    <p> Before implementing an array to send data, I first wrote a loop which connects timestamps over 5 seconds, and sends them back over bluetooth immediately.
-                        I added a sample number to each timestamp in order to track the rate at which messages were sent. In the end, 155 timestamps were sent by the Arduino in 5 seconds,
-                        implying a rate of about 31 messages/second.
-                    </p>
-                    <p>
-                        On the Arduino side:
-                        <pre>
-                            <code>
-                                case TIME_DATA_LOOP:
-                                    {
-                                    int count = 0;
-                                    unsigned long startT = millis();
-                                    while (millis() - startT < 5000) {
-                                        
-                                        tx_estring_value.clear();
-                                        tx_estring_value.append("Sample ");
-                                        tx_estring_value.append(count);
-                                        tx_estring_value.append(": ");
-                                        tx_estring_value.append((float) millis());
-                                        tx_characteristic_string.writeValue(tx_estring_value.c_str());
-                                        count++;
-
-                                    }
-
-                                    Serial.println("Sent time many times");
-
-                                    break;
-                                    }
-                            </code>
-                        </pre>
-                    </p>
-                    <p>
-                        On the Python side:
-                        <img src="images/Lab2/Time_Data_Loop.png" alt = "Time Data Loop" width=90% />
-                    </p>
-                </div>
-            </div>
-
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Sending Time Data with Arrays</h3>
-                    <p>
-                        Next, I established a global array which would be used to store timestamps over 5 seconds.
-                        Rather than send this data to over bluetooth live, instead a full dataset was collected for 5 seconds and 
-                        essentially sent in bulk.
-                        Initially, I created an array with 5000 indexes, or one message per second. Upon actually running the loop, this array 
-                        filled up very quickly, meaning messages could be stored much faster than that. Only 1 or 2 of the 5 seconds were even recorded.
-                        In future iterations, specifically when temperature and time were sent at the same time, I added a delay to remedy this.
-                    </p>
-                    <p>On the Arduino side:</p>
-                    <pre>
-                        <code>
-                            case SEND_TIME_DATA:
-                            {
-                            int i = 0;
-                            unsigned long startT = millis();
-
-                            //Build the Array
-                            while ((millis() - startT < 500) && (i < data_array_size)) {
-                                
-                                time_data[i] = (int) millis();
-                                i++;
-
-                                if(i == data_array_size-1)
-                                Serial.println("Youch! Out of memory!");
-                                
-                            }
-
-                            //Send back the array
-                            for (int j = 0; j < data_array_size; j++) {
-
-                                if(time_data[j] == 0)
-                                break;
-
-                                tx_estring_value.clear();
-                                tx_estring_value.append("Sample ");
-                                tx_estring_value.append(j);
-                                tx_estring_value.append(": ");
-                                tx_estring_value.append(time_data[j]);
-                                tx_characteristic_string.writeValue(tx_estring_value.c_str());
-
-                            }
-
-                            Serial.println("Sent time many times");
-
-                            break;
-                            }
-                        </code>
-                    </pre>
-                    <p>
-                        On the Python side:
-                        <img src="images/Lab2/SendTimeData1.png" alt = "Time Data Loop" width=90% />
-                        <img src="images/Lab2/SendTimeData2.png" alt = "Time Data Loop" width=90% />
-                    </p>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Sending Time and Temperature Data with an Array</h3>
-                    <p>
-                        Similar to the previous task, I now was sending time and temperature data simultaneously. Each was stored in a separate global array.
-                        These global arrays were stored at the very top of the ble_arduino.ino function, such that any case would be able to access them.
-
-                        <img src="images/Lab2/globalArrays.png" alt = "Global Arrays" width=90% />
-                    </p>
-
-                    <p>
-                        In order to actually record data over 5 seconds, I needed to introduce a delay to my data collection.
-                        With no delay, 1000 data points were filled up in under a second, though the exact time is unknown.
-                        When I added a delay of 20 ms between every collected data point, only 250 data points were needed to capture 5 seconds,
-                        meaning 50 datapoints a second.
-                    </p>
-
-                    <p>
-                        On the Arduino Side:
-                        <pre>
-                            <code>
-                                case GET_TEMP_READINGS:
+                                while (!initialized)
                                 {
+                                myICM.begin(WIRE_PORT, AD0_VAL);
 
-                                int i = 0;
-                                unsigned long startT = millis();
-
-                                //Build the Array
-                                while ((millis() - startT < 5000) && (i < data_array_size)) {
-                                    
-                                    time_data[i] = (int) millis();
-                                    temp_data[i] = (int) getTempDegF();
-
-                                    //Add a buffer
-                                    delay(20);
-
-                                    if(i == data_array_size-1)
-                                    Serial.println("Youch! Out of memory!");
-
-                                    i++;
-                                    
+                                SERIAL_PORT.print(F("Initialization of the sensor returned: "));
+                                SERIAL_PORT.println(myICM.statusString());
+                                if (myICM.status != ICM_20948_Stat_Ok)
+                                {
+                                    SERIAL_PORT.println("Trying again...");
+                                    delay(500);
+                                }
+                                else
+                                {
+                                    initialized = true;
+                                }
                                 }
 
-                                //Send back the array
+                                //Blink upon starting
+                                pinMode(LED_BUILTIN, OUTPUT);
+                                digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+                                delay(500);                      // wait for a second
+                                digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+                                delay(500);
+                                digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+                                delay(500);                      // wait for a second
+                                digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+                                delay(500); 
+                                digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+                                delay(500);                      // wait for a second
+                                digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+                                delay(500); 
+                            </code> 
+                        </pre>
+                        
+                        <!--add video!!-->
+
+                    </p>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Accelerometer</h3>
+                    <p>
+                        As the accelerometer measures translation in X,Y, and Z, I needed to use geometric principles in order to
+                        convert this data into rotations, namely pitch and roll. Those equations translated into the following code,
+                        using the atan2 function in order to allow for the correct output range of values. I then also converted from 
+                        radians to degrees.
+                        <pre>
+                            <code>
+                                //Convert to pitch data (pitch = theta = y rotation)
+                                //Return a float in degrees
+                                float raw_to_pitch_deg(ICM_20948_I2C *sensor){
+                                  return atan2(sensor->accX() , sensor->accZ()) * (180/M_PI);
+                                }
+                                
+                                //Convert to pitch data (roll = phi = x rotation)
+                                //Return a float in degrees
+                                float raw_to_roll_deg(ICM_20948_I2C *sensor){
+                                  return atan2(sensor->accY() , sensor->accZ()) * (180/M_PI);
+                                }
+                            </code>
+                        </pre>
+                        Note that the sensor measurements are actually taken via an anonymous function!
+                    </p>
+
+                    <p>
+                        I verified that measurements reflected when the accelerometer was held at 90 degrees roll and pitch, as shown in the videos below.
+                    </p>
+
+                    <!--add video!!-->
+
+                    <h2>FFT and Low Pass Filter</h2>
+                    <p>
+                        I noticed that, regardless of whether the accelerometer was moving or staying still, the data was rather noisy.
+                        I knew that once the accelerometer was on the car, data would become even noisier, so I decided to add a low pass filter.
+                        The first step in creating this filter was doing a Fourier Transform in order to select a cutoff frequency. I did this on the
+                        python end using the numpy, scipy, and matplotlib packages. The images below show FFTs in the moving and static cases
+                    </p>
+
+                    <!--add images!!-->
+
+                    <p>
+                        Based on the fourier transform, it seemed that most significant data points/spikes were contained within 1-5 Hz. Thus, 5 Hz
+                        became my cutoff frequency. I also determined that over ~10 seconds of sampling data, I usually collected at a rate of 262 messages/s.
+                        All of these values were used to determine my alpha value for the LPF, where dt = 1/(sampling rate), RC = 1/(2*pi*cutoff freq), and
+                        alpha=dt/(dt+RC). I used an alpha value of approximately 0.11.
+                    </p>
+                    <p>
+                        I applied the LPF using the following code, based on lecture:
+                        <pre>
+                            <code>
+                                const float alpha = 0.11;
+
+                                accel_pitch_lpf[0] = accel_pitch_raw[0];
+                                accel_roll_lpf[0] = accel_roll_raw[0];
+
+                                
+                                for(int n = 1; n < data_array_size; n++){
+                                    float pitch_raw_curr = accel_pitch_raw[n];
+
+                                    float roll_raw_curr = accel_roll_raw[n];
+
+                                    accel_pitch_lpf[n] = alpha * pitch_raw_curr + (1 - alpha) * accel_pitch_lpf[n - 1];
+                                    accel_pitch_lpf[n - 1] = accel_pitch_lpf[n];
+                                    accel_roll_lpf[n] = alpha * roll_raw_curr + (1 - alpha) * accel_roll_lpf[n - 1];
+                                    accel_roll_lpf[n - 1] = accel_roll_lpf[n];
+
+                                }
+                            </code>
+                        </pre>
+                        The results of which are shown below. I saw a significant reduction of noise while using a low pass filter!
+                    </p>
+                    <!--Add images here-->
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Gyroscope</h3>
+                    <p>
+                        Similar to the accelerometer, I had to convert the gyroscope data, measured in rad/s, to usable measurements in degrees.
+                        I did so using the following code:
+                        <pre>
+                            <code>
+                                dt = (millis()-lastT)/1000.;
+                                lastT = millis();
+
+                                gyro_pitch_raw[i] = gyro_pitch_raw[i] + myICM.gyrY()*dt;
+                                gyro_roll_raw[i] = gyro_roll_raw[i] + myICM.gyrX()*dt;
+                                gyro_yaw_raw[i] = gyro_yaw_raw[i] + myICM.gyrZ()*dt;
+                            </code>
+                        </pre>
+                    </p>
+                    
+                    <h2>Complementary Filter</h2>
+                    <p>
+                        When measuring the gyroscope data, I noticed it had a tendency to drift, in particular over long periods of data collection.
+                        It was less accurate than the accelerometer, but also less noisy. This prompted me to create a complementary filter which 
+                        fused the two. I ended up weighting the gyroscope 90% and the accelerometer 10%; experimentally, this is when I got 
+                        the most reliable results. It was mostly reliable within the -90 to 90 range, though, as outside of this range the accelerometer 
+                        would behave less predictably. No filter was applied to yaw, because the accelerometer cannot measure it. This is ironic, since 
+                        we will mostly use yaw for future applications. The result of my complementary filter can be seen below.
+                    </p>
+                    <!--Add images here!-->
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Sampling Data</h3>
+                    <p>
+                        In order to make my data collection as fast as possible, I removed a few deliberate buffers and debugging points within my code.
+                        This included Serial.println() lines of code between certain steps of the data collection and bluetooth portions of the code that I 
+                        originally used to make sure everything was working. I also stored all data in arrays. The full function can be seen below:
+
+                        <pre>
+                            <code>
+                                case SEND_GYRO_DATA:
+                                {
+
+                                clear();
+
+                                int i = 0;
+                                float startT = millis();
+                                float lastT = startT;
+                                float dt = 0;
+
+                                gyro_pitch_raw[0] = 0;
+                                gyro_roll_raw[0] = 0;
+                                gyro_yaw_raw[0] = 0;
+
+                                //Build the Array
+                                while ((millis() - startT < 10000) && (i < data_array_size)) {
+                                    
+                                    if (!myICM.dataReady())
+                                    continue;
+
+                                    myICM.getAGMT();  
+
+                                    dt = (millis()-lastT)/1000.;
+                                    lastT = millis();
+
+                                    gyro_pitch_raw[i] = gyro_pitch_raw[i] + myICM.gyrY()*dt;
+                                    gyro_roll_raw[i] = gyro_roll_raw[i] + myICM.gyrX()*dt;
+                                    gyro_yaw_raw[i] = gyro_yaw_raw[i] + myICM.gyrZ()*dt;
+
+                                    accel_pitch_raw[i] = raw_to_pitch_deg(&myICM);
+                                    accel_roll_raw[i] = raw_to_roll_deg(&myICM);
+                                    time_data[i] = millis();// - startT;
+
+                                    Serial.println(gyro_pitch_raw[i]);
+
+                                    //Add a buffer
+                                    delay(BUFFER);
+
+                                    i++;  
+                                }
+
+                                //Add a comp filter (also LPF on accelerometer)
+                                const float alpha = 0.11;
+
+                                accel_pitch_lpf[0] = accel_pitch_raw[0];
+                                accel_roll_lpf[0] = accel_roll_raw[0];
+
+                                
+                                for(int n = 1; n < data_array_size; n++){
+                                    float pitch_raw_curr = accel_pitch_raw[n];
+
+                                    float roll_raw_curr = accel_roll_raw[n];
+
+                                    accel_pitch_lpf[n] = alpha * pitch_raw_curr + (1 - alpha) * accel_pitch_lpf[n - 1];
+                                    accel_pitch_lpf[n - 1] = accel_pitch_lpf[n];
+                                    accel_roll_lpf[n] = alpha * roll_raw_curr + (1 - alpha) * accel_roll_lpf[n - 1];
+                                    accel_roll_lpf[n - 1] = accel_roll_lpf[n];
+
+                                    //Complimentary Filter
+                                    pitch_comp[n] = (pitch_comp[n] - myICM.gyrY()*dt)*0.9 + accel_pitch_lpf[n]*0.1;
+                                    roll_comp[n] = (pitch_comp[n] - myICM.gyrZ()*dt)*0.9 + accel_roll_lpf[n]*0.1;
+
+                                }
+
+                                //Send the Data Back
                                 for (int j = 0; j < data_array_size; j++) {
 
-                                    if(time_data[j] == 0 || temp_data[j] == 0.0)
+                                    if(accel_pitch_raw[j] == 0 || accel_roll_raw[j] == 0.0 || time_data[j] == 0.0)
                                     break;
 
                                     tx_estring_value.clear();
-                                    tx_estring_value.append(j);
+                                    tx_estring_value.append("Fused:");
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(accel_pitch_raw[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(accel_pitch_lpf[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(accel_roll_raw[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(accel_roll_lpf[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(gyro_pitch_raw[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(gyro_roll_raw[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(gyro_yaw_raw[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(pitch_comp[j]);
+                                    tx_estring_value.append(" | ");
+                                    tx_estring_value.append(roll_comp[j]);
                                     tx_estring_value.append(" | ");
                                     tx_estring_value.append(time_data[j]);
-                                    tx_estring_value.append(" | ");
-                                    tx_estring_value.append(temp_data[j]);
                                     tx_characteristic_string.writeValue(tx_estring_value.c_str());
 
                                 }
 
-                                Serial.println("Sent time many times");
-
                                 break;
                                 }
                             </code>
                         </pre>
-                        It is also worth noting that in all these commands, I had the serial monitor print when it was done.
+                        The purpose of the clear() function is to clear out all of the data arrays each time the command is called.
+                        A similar function does the exact same on the python side. This is because I experienced a lot of trouble with 
+                        calling commands multiple times- if the data set wasn't the exact same size every time, then old data points would be 
+                        tacked on to the end of a new dataset, which messed with my plots and filters quite a bit (while also making time seem nonlinear!).
+                        I eventually realized that this is because my arrays were never getting reset on each side, and added that into the code. 
+                        Admittedly, this may slow things down since it involves looping over all elements of the array.
                     </p>
+                    <p> Despite this, I can reliably send data for 5-10 seconds at a time, or even more. This is shown in the video and photos below.</p>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Stunts!</h3>
                     <p>
-                        On the Python side:
-                        <img src="images/Lab2/TimeandTemp1.png" alt = "Global Arrays" width=90% />
+                        We also recieved the namesake Fast Robot during this lab! I charged up the battery and drove it around a bit to 
+                        get a feel for things. Next, we will start soldering our own boards to the robot and make it autonomous. I noticed that 
+                        very quick changes in direction could cause the robot to flip.
                     </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    <h3>Advantages and Disadvantages of Each Method</h3>
+                    <h3>Discussion!</h3>
                     <p>
-                        Each method of sending data has its own pros and cons. The first method of sending datapoints
-                        live is very "quick" in the moment. For very short operations it may be beneficial to be able to
-                        watch the measurements live, especially in a case where debugging is needed. However, this method
-                        essentially clips the data, because the bluetooth connections can only send datapoints so fast. For
-                        steady state cases, say if the robot is just driving straight without turns, this does not matter much.
-                        However for complex motions this data clipping is a disadvantage.
-                    </p>
-                    <p>
-                        In comparison, the array method of sending data was incredibly fast. I was able to store at a rate faster 
-                        than one timestamp per second, implying a very fast data transfer rate. In addition to this, it was very fast to
-                        send and process the data array using the notification handler. It would be useful to collect data this way
-                        for something like a stunt, and be able to process the success of an operation after it is completed and be able to
-                        optimize it from there.
-                    </p>
-                    <p>
-                        This begs the question of, when will the Artemis literally run out of data? The Artemis has 384 kB of RAM. If every
-                        float takes up 4 bytes of RAM, then 96,000 datapoints can be stored before memory runs out. If we are recording
-                        both time and temperature, this is 48,000 datapoints per measurement. However, each string also takes up a certain number of
-                        bytes per character. This means even less data can be sent to the notification handler before storage runs out.
-                        In comparison, sampling at a specific frequency could be much faster. If we transmit 16-bit pieces of data at a rate of
-                        150 Hz, then over 6 seconds, 1500 bytes will be used. Dividing 384 kb by 1500 means 256 5 second intervals of data can be
-                        sent before storage runs out!
-                    </p>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                <div class="flex-grow-1">
-                    <h3>Discussion</h3>
-                    <p>Bluetooth communication will be extremely useful in future labs for communication between the bot and
-                        my computer. I imagine this will be useful for feedback loops, for example. This lab also made me more 
-                        comfortable with Jupyter Labs.
+                        Ultimately, this lab taught me a lot about code efficiency. I spent a long time trying to make my code robust and 
+                        fix small but crucial mistakes related to writing over old data. It also emphasized accuracy and precision- the accelerometer 
+                        was pretty accurate (in comparison to the gyroscope) but had more noise and was thus less precise. I learned how filters can be used to 
+                        combat this
                     </p>
                 </div>
             </div>
