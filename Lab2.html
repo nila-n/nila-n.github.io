@@ -44,10 +44,13 @@
                     <h3>Prelab</h3>
                     <p>
                         To start the lab, I just directly connected my IMU to the Artemis, and ran example code.
-                        Since the ADR jumper was not closed, I needed to set ADO-0 equal to 1
+                        Since the ADR jumper was not closed, I needed to set ADO-0 equal to 1.
                         The serial plotter was helpful in visualizing the data.
 
-                        <!--add video!!-->
+                        <iframe width="560" height="315" src="https://youtube.com/embed/7OT_JLKzr2Y?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
 
                         After this, I also added in code to have the LED on the Artemis blink once the gyroscope had been
                         initialized. This was included within the void setup() function on the Arduino side.
@@ -87,7 +90,10 @@
                             </code> 
                         </pre>
                         
-                        <!--add video!!-->
+                        <iframe width="560" height="315" src="https://youtube.com/embed/cG--8xnJkrw?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
 
                     </p>
                 </div>
@@ -123,9 +129,17 @@
                         I verified that measurements reflected when the accelerometer was held at 90 degrees roll and pitch, as shown in the videos below.
                     </p>
 
-                    <!--add video!!-->
+                    <iframe width="560" height="315" src="https://youtube.com/embed/W5sWRIQzzxA?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
 
-                    <h2>FFT and Low Pass Filter</h2>
+                    <iframe width="560" height="315" src="https://youtube.com/embed/RW7X9qqe-BA?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
+                    <h4>FFT and Low Pass Filter</h4>
                     <p>
                         I noticed that, regardless of whether the accelerometer was moving or staying still, the data was rather noisy.
                         I knew that once the accelerometer was on the car, data would become even noisier, so I decided to add a low pass filter.
@@ -133,7 +147,10 @@
                         python end using the numpy, scipy, and matplotlib packages. The images below show FFTs in the moving and static cases
                     </p>
 
-                    <!--add images!!-->
+                    <p>
+                        <img src="images/IMU/Pitch_FFT_comb.png" alt = "Pitch Results" width=90% />
+                        <img src="images/IMU/Roll_FFT_comb.png" alt = "Roll Results" width="90%" />
+                    </p>
 
                     <p>
                         Based on the fourier transform, it seemed that most significant data points/spikes were contained within 1-5 Hz. Thus, 5 Hz
@@ -166,7 +183,17 @@
                         </pre>
                         The results of which are shown below. I saw a significant reduction of noise while using a low pass filter!
                     </p>
-                    <!--Add images here-->
+                    
+                    <p>
+                        <img src="images/IMU/Pitch.png" alt = "Pitch Results" width=90% />
+                        <img src="images/IMU/Pitch_Moving.png" alt = "Roll Results" width=90% />
+                    </p>
+
+                    <p>
+                        <img src="images/IMU/Roll Data.png" alt = "Pitch Results" width=90% />
+                        <img src="images/IMU/Roll_Moving.png" alt = "Roll Results" width=90% />
+                    </p>
+
                 </div>
             </div>
 
@@ -186,9 +213,14 @@
                                 gyro_yaw_raw[i] = gyro_yaw_raw[i] + myICM.gyrZ()*dt;
                             </code>
                         </pre>
+
+                        <p>
+                            <img src="images/IMU/Yaw.png" alt = "Yaw Readings" width=90% />
+                        </p>
+
                     </p>
                     
-                    <h2>Complementary Filter</h2>
+                    <h4>Complementary Filter</h4>
                     <p>
                         When measuring the gyroscope data, I noticed it had a tendency to drift, in particular over long periods of data collection.
                         It was less accurate than the accelerometer, but also less noisy. This prompted me to create a complementary filter which 
@@ -197,7 +229,12 @@
                         would behave less predictably. No filter was applied to yaw, because the accelerometer cannot measure it. This is ironic, since 
                         we will mostly use yaw for future applications. The result of my complementary filter can be seen below.
                     </p>
-                    <!--Add images here!-->
+                    
+                    <p>
+                        <img src="images/IMU/Gyro_Moving.png" alt = "Fused Pitch Results" width=90% />
+                        <img src="images/IMU/Gyro_Roll_Moving.png" alt = "Fused Roll Results" width=90% />
+                    </p>
+
                 </div>
             </div>
 
@@ -319,6 +356,16 @@
                         Admittedly, this may slow things down since it involves looping over all elements of the array.
                     </p>
                     <p> Despite this, I can reliably send data for 5-10 seconds at a time, or even more. This is shown in the video and photos below.</p>
+
+                    <p>
+                        <img src="images/IMU/Data_Annotated.png" alt = "Data Labels" width=90% />
+                    </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/x5Jcz1Jm5RI?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
                 </div>
             </div>
 
@@ -330,12 +377,18 @@
                         get a feel for things. Next, we will start soldering our own boards to the robot and make it autonomous. I noticed that 
                         very quick changes in direction could cause the robot to flip.
                     </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/IpQSmda_C6E?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
-                    <h3>Discussion!</h3>
+                    <h3>Discussion</h3>
                     <p>
                         Ultimately, this lab taught me a lot about code efficiency. I spent a long time trying to make my code robust and 
                         fix small but crucial mistakes related to writing over old data. It also emphasized accuracy and precision- the accelerometer 
