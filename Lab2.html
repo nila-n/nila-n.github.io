@@ -148,8 +148,8 @@
                     </p>
 
                     <p>
-                        <img src="images/IMU/Pitch_FFT_comb.png" alt = "Pitch Results" width=90% />
-                        <img src="images/IMU/Roll_FFT_comb.png" alt = "Roll Results" width="90%" />
+                        <img src="images/IMU/Pitch_FFT_comb.png" alt = "Pitch Results" width=70% />
+                        <img src="images/IMU/Roll_FFT_comb.png" alt = "Roll Results" width=70% />
                     </p>
 
                     <p>
@@ -185,13 +185,13 @@
                     </p>
                     
                     <p>
-                        <img src="images/IMU/Pitch.png" alt = "Pitch Results" width=90% />
-                        <img src="images/IMU/Pitch_Moving.png" alt = "Roll Results" width=90% />
+                        <img src="images/IMU/Pitch.png" alt = "Pitch Results" width=50% />
+                        <img src="images/IMU/Pitch_Moving.png" alt = "Roll Results" width=50% />
                     </p>
 
                     <p>
-                        <img src="images/IMU/Roll Data.png" alt = "Pitch Results" width=90% />
-                        <img src="images/IMU/Roll_Moving.png" alt = "Roll Results" width=90% />
+                        <img src="images/IMU/Roll Data.png" alt = "Pitch Results" width=50% />
+                        <img src="images/IMU/Roll_Moving.png" alt = "Roll Results" width=50% />
                     </p>
 
                 </div>
@@ -215,7 +215,7 @@
                         </pre>
 
                         <p>
-                            <img src="images/IMU/Yaw.png" alt = "Yaw Readings" width=90% />
+                            <img src="images/IMU/Yaw.png" alt = "Yaw Readings" width=70% />
                         </p>
 
                     </p>
@@ -227,12 +227,13 @@
                         fused the two. I ended up weighting the gyroscope 90% and the accelerometer 10%; experimentally, this is when I got 
                         the most reliable results. It was mostly reliable within the -90 to 90 range, though, as outside of this range the accelerometer 
                         would behave less predictably. No filter was applied to yaw, because the accelerometer cannot measure it. This is ironic, since 
-                        we will mostly use yaw for future applications. The result of my complementary filter can be seen below.
+                        we will mostly use yaw for future applications. The result of my complementary filter can be seen below. The top photo 
+                        shows pitch, while the bottom photo shows roll.
                     </p>
                     
                     <p>
-                        <img src="images/IMU/Gyro_Moving.png" alt = "Fused Pitch Results" width=90% />
-                        <img src="images/IMU/Gyro_Roll_Moving.png" alt = "Fused Roll Results" width=90% />
+                        <img src="images/IMU/Gyro_Moving.png" alt = "Fused Pitch Results" width=70% />
+                        <img src="images/IMU/Gyro_Roll_Moving.png" alt = "Fused Roll Results" width=70% />
                     </p>
 
                 </div>
@@ -358,7 +359,7 @@
                     <p> Despite this, I can reliably send data for 5-10 seconds at a time, or even more. This is shown in the video and photos below.</p>
 
                     <p>
-                        <img src="images/IMU/Data_Annotated.png" alt = "Data Labels" width=90% />
+                        <img src="images/IMU/Data_Annotated.png" alt = "Data Labels" width=70% />
                     </p>
 
                     <iframe width="560" height="315" src="https://youtube.com/embed/x5Jcz1Jm5RI?feature=share"
@@ -393,7 +394,7 @@
                         Ultimately, this lab taught me a lot about code efficiency. I spent a long time trying to make my code robust and 
                         fix small but crucial mistakes related to writing over old data. It also emphasized accuracy and precision- the accelerometer 
                         was pretty accurate (in comparison to the gyroscope) but had more noise and was thus less precise. I learned how filters can be used to 
-                        combat this
+                        combat this, which will help me in the future.
                     </p>
                 </div>
             </div>
