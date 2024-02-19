@@ -202,17 +202,100 @@
                     <h3>Speed and Robustness</h3>
 
                     <h2>Collecting Data over Time</h2>
+                    <p>Similar to previous labs, I wrote code to collect and then send data over 5 seconds. 
+                        On the Arduino side, this was very similar to my IMU data- I collected data in arrays and then 
+                        sent it via bluetooth by looping over the arrays. The main difference was that I had to check whether or 
+                        not sensor data was available, since sampling only occured as fast as 50 Hz. I did this using the .checkForDataReady() function.
+                        
+                        <img src="images/TOF/Data_5s.png" alt = "Experimental results" width=80% />
+
+                        One issue with this, though, is that .startRanging() is called at the start of every call of this command. 
+                        For future labs, I want to just implement a StartRecording and StopRecording command with some kind of boolean 
+                        flag that makes the sensors start and stop ranging and make things as efficient as possible.
+                    </p>
+
+                    <p>
+                        On the python, I changed my notification handler to process the new data by creating new arrays, one per TOF and one for time:
+                        <pre>
+                            <code>
+                                def notif_handler(uuid, notif):
+                                    global time_data
+                                    global dist_1
+                                    global dist_2
+                                    
+                                    s = ble.bytearray_to_string(notif)
+
+                                    sep_notif = s.split(" | ")
+
+                                    time_data.append(float(sep_notif[1]))
+                                    dist_1.append(float(sep_notif[2]))
+                                    dist_2.append(float(sep_notif[3]))
+                            </code>
+                        </pre>
+                    </p>
 
                     <h2>Discussion of speed</h2>
-                        
+                    <p>
+                        Next, I focused on trying to record data as fast as possible. To do this, I moved the .startRanging() command 
+                        to be part of the void setup() function such that it was only called once. Then, I had a timer count how many times the loop() 
+                        function ran in between data measurements. The code went as follows: 
+
+                        <pre>
+                            <code>
+                                int start = millis();
+
+                                Serial.print("T:");
+                                Serial.print(start);
+
+                                if (distanceSensor1.checkForDataReady()) {
+                                  int distance1 = distanceSensor1.getDistance();
+                                  Serial.print(" | Distance 1 (mm): ");
+                                  Serial.print(distance1);
+                                }
+
+                                if (distanceSensor2.checkForDataReady()) {
+                                  int distance2 = distanceSensor2.getDistance();
+                                  Serial.print(" | Distance 2 (mm): ");
+                                  Serial.print(distance2);
+                                }
+
+                                int end = millis();
+
+                                Serial.print("\tLoop Time:" );
+                                Serial.println(end - start);
+                            </code>
+                        </pre>
+
+                        <img src="images/TOF/rapid_data_collect.png" alt = "rapid data collection results" width=80% />
+                    </p>
+
+                    <p>
+                        The result of this was that there would be anywhere from 8-13ms between data measurements from the TOF 
+                        sensors themselves (which, each sensor reads separately as well), and 4-8 ms between iterations of the loop as a whole. This implies that getting the measurements 
+                        themselves took nearly half the time of the loop iteration. Although the sensor is meant to read at a frequency of 50Hz, in actually it is much 
+                        slower. There is essentially a delay of nearly 100 ms between each individual TOF reading. This may be due to the checkForDataReady() function as well as the time 
+                        taken to print to Serial. I think the ranging 
+                    </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/3sC5fgaRdkk?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
 
                 </div>
+
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Discussion</h3>
                         
+                    <p>
+                        Ultimately, this lab taught me about proper soldering techniques as well as determining accuracy and precision of 
+                        sensors. I imagine it will be useful to filter these TOF sensors in the future to create some kind of model of the 
+                        robot's movements. After completing this lab, I also see ways I could improve my code by just having some command/function to 
+                        start and stop recording data rather than my current methods.
+                    </p>
 
                 </div>
             </div>
