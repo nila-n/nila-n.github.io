@@ -86,7 +86,46 @@
                 <div class="flex-grow-1">
                     <h3>XShutdown & Configuring 2 TOFs</h3>
                         
+                    <p>
+                        As discussed in the pre-lab, I only soldered the XShut pin of one of the TOF sensors. I wired mine to pin 2 on the Artemis, 
+                        and I switched between HIGH and LOW to turn the first TOF off, change it's address, and then turn it back on. The code for this 
+                        is shown below. In this setup function, I also decided to use the shortest distance mode for later tests of precision and accuracy.
+                    </p>
 
+                    <pre>
+                        <code>
+                            pinMode(SHUTDOWN_PIN, OUTPUT);
+                            digitalWrite(SHUTDOWN_PIN,0);
+
+                            Wire.begin();
+
+                            distanceSensor1.init();
+
+                            //Shut down first sensor, change address
+                            distanceSensor1.setI2CAddress(0x54);
+
+                            if (distanceSensor1.begin() != 0) //Begin returns 0 on a good init
+                            {
+                            Serial.println("First sensor failed to begin...");
+                            while (1)
+                                ;
+                            }
+                            Serial.println("Sensor 1 online!");
+
+                            digitalWrite(SHUTDOWN_PIN,1);  
+
+                            if (distanceSensor2.begin() != 0)  //Begin returns 0 on a good init
+                            {
+                            Serial.println("Second sensor failed to begin...");
+                            while (1)
+                                ;
+                            }
+                            Serial.println("Sensor 2 online!");
+
+                            distanceSensor1.setDistanceModeShort();
+                            distanceSensor2.setDistanceModeShort();
+                        </code>
+                    </pre>
                 </div>
             </div>
 
@@ -94,13 +133,77 @@
                 <div class="flex-grow-1">
                     <h3>Sensor Precision and Accuracy</h3>
                         
+                    <p>
+                        With the two sensors wired up, I then focused on testing them. I set the distance mode to short, which measures a maximum of
+                        1.3 meters at a max sampling rate of 50 Hz. I taped the TOF sensors to my laptop in a flat orientation, and used a tape measure to 
+                        set up set distances from a wall. At each distance, I measured 100 data points with the intention of finding the mean and standard deviation 
+                        at each distance. I then used the mean to determine a rough accuracy at each distance, while standard deviation told me more about 
+                        the sensor's precision/repeatability.
 
+                        <img src="images/TOF/test1.png" alt = "Experimental setup" width=80% />
+                        <img src="images/TOF/test2.png" alt = "Experimental setup" width=80% />
+
+                        The code snippet below shows how data was measured. Afterwards, it was sent via bluetooth using the same method as past labs.
+                        <pre>
+                            <code>
+                                distanceSensor1.startRanging(); //Write configuration bytes to initiate measurement
+                                distanceSensor2.startRanging();
+
+                                clear();
+
+                                int startT = millis();
+                                int i = 0;
+                                int j = 0;
+                                while(i < NUM_DATA_POINTS && j < NUM_DATA_POINTS){
+                                    time_data[i] = millis(); //normalized time
+
+                                    Serial.println(time_data[i]);
+
+                                    if (distanceSensor1.checkForDataReady()) {
+                                    distance1_data[i] = distanceSensor1.getDistance();
+                                    i++;
+                                    }
+
+                                    if (distanceSensor2.checkForDataReady()) {
+                                    distance2_data[j] = distanceSensor2.getDistance();
+                                    j++;
+                                    }
+                                }
+                            </code>
+                        </pre>
+                    </p>
+
+                    <p>
+                        The results of this are shown below.
+                        <img src="images/TOF/Sensor Measurements.png" alt = "Experimental results" width=80% />
+                        <img src="images/TOF/Sensor Precision.png" alt = "Experimental results" width=80% />
+                        <img src="images/TOF/Sensor Errorbars.png" alt = "Experimental results" width=80% />
+                    </p>
+
+                    <p>
+                        Based on this experiment, I noticed a few things about sensor performance. 
+                        <ul>
+                            <li>At far away distances (24 inches or 2 feet) both sensors lacked reliability, with standard deviations of 
+                                around 10 mm (1 cm). In comparison, at all other distances the  standard deviation value was 1.5mm or less. </li>
+                            <li>At distances under 1-2 inches (50.8 mm), data was fairly unreliable. One of my TOF sensors consistently just 
+                                read 0 mm under 1 inch, and the other had a standard deviation of 1-1.5mm, however that is now a much 
+                                larger percentage of the true value.
+                            </li>
+                            <li>The two sensors were consistently a few mm off from each other, however this may just be due to a non-robust 
+                                setup (as in, they were just taped to my laptop).
+                            </li>
+                        </ul>
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Speed and Robustness</h3>
+
+                    <h2>Collecting Data over Time</h2>
+
+                    <h2>Discussion of speed</h2>
                         
 
                 </div>
