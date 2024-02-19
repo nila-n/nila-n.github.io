@@ -140,8 +140,10 @@
                         at each distance. I then used the mean to determine a rough accuracy at each distance, while standard deviation told me more about 
                         the sensor's precision/repeatability.
 
-                        <img src="images/TOF/test1.png" alt = "Experimental setup" width=80% />
-                        <img src="images/TOF/test2.png" alt = "Experimental setup" width=80% />
+                        <p>
+                            <img src="images/TOF/test1.png" alt = "Experimental setup" width=80% />
+                            <img src="images/TOF/test2.png" alt = "Experimental setup" width=80% />
+                        </p>
 
                         The code snippet below shows how data was measured. Afterwards, it was sent via bluetooth using the same method as past labs.
                         <pre>
@@ -175,9 +177,9 @@
 
                     <p>
                         The results of this are shown below.
-                        <img src="images/TOF/Sensor Measurements.png" alt = "Experimental results" width=80% />
-                        <img src="images/TOF/Sensor Precision.png" alt = "Experimental results" width=80% />
-                        <img src="images/TOF/Sensor Errorbars.png" alt = "Experimental results" width=80% />
+                        <img src="images/TOF/Sensor_Measurements.png" alt = "Experimental results" width=80% />
+                        <img src="images/TOF/Sensor_Precision.png" alt = "Experimental results" width=80% />
+                        <img src="images/TOF/Sensor_Errorbars.png" alt = "Experimental results" width=80% />
                     </p>
 
                     <p>
@@ -201,14 +203,17 @@
                 <div class="flex-grow-1">
                     <h3>Speed and Robustness</h3>
 
-                    <h2>Collecting Data over Time</h2>
+                    <h4>Collecting Data over Time</h4>
                     <p>Similar to previous labs, I wrote code to collect and then send data over 5 seconds. 
                         On the Arduino side, this was very similar to my IMU data- I collected data in arrays and then 
                         sent it via bluetooth by looping over the arrays. The main difference was that I had to check whether or 
                         not sensor data was available, since sampling only occured as fast as 50 Hz. I did this using the .checkForDataReady() function.
                         
+                    </p>
+                    <p>
                         <img src="images/TOF/Data_5s.png" alt = "Experimental results" width=80% />
-
+                    </p>
+                    <p>
                         One issue with this, though, is that .startRanging() is called at the start of every call of this command. 
                         For future labs, I want to just implement a StartRecording and StopRecording command with some kind of boolean 
                         flag that makes the sensors start and stop ranging and make things as efficient as possible.
@@ -234,7 +239,7 @@
                         </pre>
                     </p>
 
-                    <h2>Discussion of speed</h2>
+                    <h4>Discussion of speed</h4>
                     <p>
                         Next, I focused on trying to record data as fast as possible. To do this, I moved the .startRanging() command 
                         to be part of the void setup() function such that it was only called once. Then, I had a timer count how many times the loop() 
@@ -265,7 +270,9 @@
                                 Serial.println(end - start);
                             </code>
                         </pre>
+                    </p>
 
+                    <p>
                         <img src="images/TOF/rapid_data_collect.png" alt = "rapid data collection results" width=80% />
                     </p>
 
