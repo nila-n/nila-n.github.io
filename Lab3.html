@@ -198,10 +198,15 @@
                     </p>
 
                     <p>Regarding ranging time, I would expect accuracy to be greater if a higehr ranging time was used for 
-                        longer distances. I read in the documentation that the fastest ranging time, 20 ms, only works in short mode. 
-                        I would imagine that a longer ranging time, because it allows greater time of travel for the laser, would end up in a 
-                        more accurate reading when the object is further away. Unfortunately, I was unable to determine the function required to 
-                        change this setting, as it did not match the documentation.
+                        longer distances. The documentation shows that ranging can only be as low as 20 ms, which only works in short mode (since, 
+                        at longer distances, more time is required for the laser to travel). I changed the ranging time budget of the sensor using the line 
+                        of code, distanceSensor.setTimingBudgetInMs(x), where x was my timing budget. I tested at 20, 66, and 100 ms and noticed the smallest standard deviation (but also, least accuracy) 
+                        at 100 ms for a short distance of ~6 inches. However, there were flaws in my experimental setup, namely that:
+                        <ul>
+                            <li>The room was much darker than previous tests.</li>
+                            <li>The sensors themselves were not very secure, I was holding them with my hand.</li>
+                        </ul>
+                        <img src="images/TOF/Ranges.png" alt = "Experimental results" width=80% />
                     </p>
                 </div>
             </div>
