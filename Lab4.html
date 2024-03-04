@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html" style="color: rgb(255, 255, 255);">Lab 4: Motor Drivers</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 4 <span class="text-primary">Motor Drivers, Open Loop Control</span></h2>
+            <p class="mb-5">The purpose of this lab was to finish installing hardware in the robot, starting with configuring the motor drivers and 
+                then integrating all boards. After this, we characterized the open loop robot system by driving around.
+            </p>
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Prelab</h3>
+
+                    <h4>Motor Driver Wiring</h4>
+
+                    <p>I started the lab by figuring out how to wire up each H-Bridge/motor driver. The datasheet helped me to 
+                        understand the functionality of each pin on the board. It is worth noting that in my TOF lab (Lab 3), I also included 
+                        a wiring diagram. This diagram was actually incorrect, as it made use of the VMM pins on the motor drivers, which in reality 
+                        do not serve a function. An updated wiring diagram is shown below. The following pins are used.
+
+                        <ul>
+                            <li>Ground Pins: 1 to artemis and 1 to negative battery lead</li>
+                            <li>Vin: positive batter lead</li>
+                            <li>AIN1 & BIN1: linked to each other in series, then to Artemis pins 0 and 4</li>
+                            <li>AIN2 & BIN2: linked to each other in series, then to Artemis pins 1 and 5</li>
+                            <li>AOUT1 & BOUT1: linked to each other in series, then to positive motor lead</li>
+                            <li>AOUT2 & BOUT2: linked to each other in series, then to negative motor lead</li>
+                        </ul>
+
+                    </p>
+
+                    <p>
+                        The A and B In/Out pins on the motor drivers are coupled together in order to be able to 
+                        provide enough current to the motors. Each board powers one motor, and each motor powers 
+                        two wheels. Without daisy chaining these pins together, current passing through would be 
+                        halved. Not all GPIO pins on the Artemis are PWM capable; specifically, 8 and 10 are not.
+                        This influenced my decisions, as I was tempted to do Pins 5-6-7-8 for some pizzazz.
+                    </p>
+
+                    <img src="images/Lab4/Wiring Diagram.jpg" alt = "circuit diagram" width=80% />
+
+                    <h4>Battery Discussion</h4>
+                    <p>
+                        The motor drivers and the Artemis are each powered by their own 650 mAh batteries. This is partially because 
+                        the ideal current draw for the motors is much higher than the Artemis. Separating the paths of current also 
+                        makes for less noisy signals.
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>PWM Tests</h3>
+
+                    <p>Before soldering the motor drivers to the motors themselves, I wanted to verify that they worked in both directions. 
+                        Powering one pin HIGH and the other LOW would allow the motor to go either forward or backwards, so I tested both configurations for each 
+                        motor driver, as well as testing them simultaneously.
+                    </p>
+
+                    <p>To do these tests, I hooked up the Vin/Ground pins on the motor drivers up to a DC power supply. Based on the 
+                        datasheet as well as known information about the motors themselves, I chose to supply the drivers with 3.7V, even though they accept 
+                        up to 10. Then, I hooked up the OUT1 and OUT2 pins to the oscilloscope probes. On the code side, I was inspired by Bhadra Bejoy's (2023) and Robby Huang's (2022) 
+                        idea to run a loop that incremented the PWM output from 0 to 255. I did this for both channels, as well as both motor drivers. The second video 
+                        embedded below shows one motor driver going forward, and the other in reverse, simulating a turn!
+                    </p>
+                        
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Testing Individual Motors</h3>
+                        
+                    <h3>Challenges</h3>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Minimum PWM to Overcome Friction</h3>
+                        
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Open Loop Control</h3>
+
+                    <h4>Wiring</h4>
+                    <p>
+                        First, I integrated everything into the robot. I tried to braid cable as much as possible to reduce noisy signals, 
+                        and ziptie wires together for cleanliness.
+                    </p>
+
+                    <img src="images/Lab4/Robot.jpg" alt = "circuit diagram" width=80% />
+
+                    <h4>System Drift</h4>
+                    
+
+                    <h4>Adding a Calibration Constant</h4>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+                        
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Bonus Dog Content</h3>
+                        
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
