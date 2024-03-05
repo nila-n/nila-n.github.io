@@ -375,6 +375,19 @@
                         PWM signals did not conflict with each other after opposing movements.
                     </p>
 
+                    <pre>
+                        <code>
+                            void loop()
+                            {
+                            driveStraightCalib(-1,3000,100);
+                            delay(1000);
+                            turn(-1,800,220);
+                            delay(1000);
+                            driveStraightCalib(1,3000,100);
+                            }
+                        </code>
+                    </pre>
+
                     <iframe width="560" height="315" src="https://youtube.com/embed/5GDAwuVQY20?feature=share"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -385,10 +398,35 @@
                     <p>
                         I noticed inconsistency with one side of my robot, in one specific direction. To me, this implied a soldering issue. I traced the 
                         issue back to pin 4 based on the direction and side of inconsistency. Essentially, if programmed to go for 3 seconds with PWM through 
-                        pin 4, the left wheels would spin for maybe 1 second before stopping and stuttering, whereas the right side would keep going. 
+                        pin 5, the left wheels would spin for maybe 1 second before stopping and stuttering, whereas the right side would keep going. 
                         I checked all of my connections, and visually they seemed sound, as well as braided my cables to hopefully reduce signal interference. 
-                        So, I decided to re-hook up my system to the oscilloscope to see what was going on, since earlier testing indicated that all 4 pins worked 
-                        just fine.
+                        Some debugging things I tried:
+                    </p>
+
+                    <ul>
+                        <li>Probing with multimeter to make sure the connection was sound (video shown below, but from earlier tests before board was soldered to motor to demonstrate the general technique)</li>
+                        <li>Isolating each pin and testing them by applying both high and low PWMs</li>
+                        <li>Redoing wiring to try and better separate the two motor drivers</li>
+                        <li>Battery replacement</li>
+                        <li>Visual solder inspection</li>
+                    </ul>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/xb3CUv3oTgM?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/t7MLjqG5qUk?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
+                    <p>
+                        None of this worked at first; So, I went to office hours to try and get some help with this. As it turns out, my soldered connections were not as solid as I believed. 
+                        Specifically, pin 5's connection to the Artemis had a small gap in it where the solder had not melted through that I had not noticed before. I essentially re-checked all soldered connections while in office hours. 
+                        Rather than add more solder, I reheated what I had (it was a bit globby) and let it melt into the wires more. Then, when I tested again (with a fresh 
+                        battery as well), my problem had been solved! Luckily for me, when I ran the other open control commands, my calibration factor over 6 feet was the same. 
+                        However, I am still looking to tune it more with PID.
                     </p>
 
                 </div>
