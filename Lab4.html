@@ -30,7 +30,7 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html" style="color: rgb(255, 255, 255);">Lab 4: Motor Drivers</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html" style="color: rgb(255, 255, 255);">Lab 4: Motor Drivers, Open Loop Control</a></li>
                 </ul>
             </div>
         </nav>
@@ -54,7 +54,7 @@
 
                         <ul>
                             <li>Ground Pins: 1 to artemis and 1 to negative battery lead</li>
-                            <li>Vin: positive batter lead</li>
+                            <li>Vin: positive battery lead</li>
                             <li>AIN1 & BIN1: linked to each other in series, then to Artemis pins 0 and 4</li>
                             <li>AIN2 & BIN2: linked to each other in series, then to Artemis pins 1 and 5</li>
                             <li>AOUT1 & BOUT1: linked to each other in series, then to positive motor lead</li>
@@ -133,6 +133,7 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen></iframe>
 
+                    <img src="images/Lab4/DC Power Supply.jpg" alt = "circuit diagram" width=80% />    
                         
                 </div>
             </div>
@@ -140,15 +141,57 @@
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Testing Individual Motors</h3>
-                        
-                    <h3>Challenges</h3>
+
+                    <p>After verifying the soldered connections, I hooked up each motor to their respective motor drivers, plus the power supply 
+                        to make sure that the motors were receiving sufficient current. An example of the type of code I used to do this is 
+                        shown below, plus a video. The video depicts performance once the batteries were soldered, however code was the same with the 
+                        power supply.
+                    </p>
+                    
+                    <pre>
+                        <code>
+                            void setup() {
+                                pinMode(4, OUTPUT);
+                                pinMode(5, OUTPUT);
+                                pinMode(0, OUTPUT);
+                                pinMode(1, OUTPUT);
+                            }
+                              
+                            void loop() {
+                              
+                                analogWrite(4,0);
+                                analogWrite(5,200);
+
+                                delay(5000);
+
+                                analogWrite(4,0);
+                                analogWrite(5,0);
+                            }
+                        </code>
+                    </pre>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/MUJ6m3DsaKg?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/cRE_WS-a6oo?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Minimum PWM to Overcome Friction</h3>
-                        
+                    
+                    <p>
+                        I incrementally increased PWM by 5 until I could see the robot start to move after being placed on the floor,
+                        With a fresh battery this was around 40-45 PWM, but with a worn battery this was anywhere from 50-65 PWM. I am 
+                        considering putting tape on my robot wheels to reduce the friction/rolling resistance it experiences and overall 
+                        ease the load on the motors.
+                    </p>
                     
                 </div>
             </div>
@@ -168,13 +211,185 @@
                     <h4>System Drift</h4>
 
                     <p>The goal of open loop control was to drive the robot forward approximately 6ft/2m in as straight a line 
-                        as possible.
+                        as possible. I ran the car at 120 PWM for roughly 3 seconds, which actually ended up being greater than 6 feet, 
+                        but still showcased that the car had a tendency to drift towards the right. At around the 4.5-5ft mark in the video below, 
+                        I see the robot start to drift, and by 6 ft it is about 1 foot away from the guiding line.
                     </p>
                     
+                    <iframe width="560" height="315" src="https://youtube.com/embed/SXQJnWWf6Uk?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
 
                     <h4>Adding a Calibration Constant</h4>
 
+                    <p> 
+                        The observed drift prompted me to add a calibration constant which would multiply the PWM of the left motor to 
+                        roughly match that of the right side and remove the drift. I tuned this by hand, as using the Gyroscope/IMU would turn the 
+                        system into a closed loop one. Thus, I mostly did trial and error until I had significantly reduced the drift. This was 
+                        challenging because as the battery drained, the characteristics of the drift would change and push me to pick a 
+                        calibration constant too high that would actually overcorrect with a fully charged battery. I ended up settling with a 
+                        constant of 1.6, which seemed to mostly reduce the drift. Additional tuning may be needed, however I expect PID to help with this 
+                        in the future. 
+                    </p>
+
+                    <pre>
+                        <code>
+                            #define motorR1 0
+                            #define motorR2 1
+                            #define motorL1 4
+                            #define motorL2 5
+                            #define calibFactor 1.6
+
+                            void
+                            setup()
+                            {
+
+                            pinMode(motorR1, OUTPUT);
+                            pinMode(motorR2, OUTPUT);
+
+                            pinMode(motorL1, OUTPUT);
+                            pinMode(motorL2, OUTPUT);
+
+                            //Blink upon starting
+                                pinMode(LED_BUILTIN, OUTPUT);
+                                digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+                                delay(500);                      // wait for a second
+                                digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+                                delay(500);
+                                digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+                                delay(500);                      // wait for a second
+                                digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+                                delay(500); 
+
+                            delay(10000);
+                            }
+
+                            void loop()
+                            {
+                                driveStraightCalib(1,3000,100);
+                            }
+
+                            void driveStraight(int dir, int time, int pwm){
+                                //Drive straight for x seconds
+                                //Dir = 1 means forward
+                                //Dir = -1 means backwards
+                                if(dir==-1){
+                                  analogWrite(motorR1, 0);
+                                  analogWrite(motorR2, pwm);
+                                  analogWrite(motorL1, pwm);
+                                  analogWrite(motorL2, 0);
+                                  delay(time);
+                                }
+                              
+                                else{
+                                  analogWrite(motorR1, pwm);
+                                  analogWrite(motorR2, 0);
+                                  analogWrite(motorL1, 0);
+                                  analogWrite(motorL2, pwm);
+                                  delay(time);
+                                }
+                              
+                                //stop
+                                analogWrite(motorR1, 0);
+                                analogWrite(motorR2, 0);
+                                analogWrite(motorL1, 0);
+                                analogWrite(motorL2, 0);
+                              }
+                              
+                              void driveStraightCalib(int dir, int time, int pwm){
+                                //Drive straight for x seconds
+                                //Dir = 1 means forward
+                                //Dir = -1 means backwards
+                                if(dir==1){
+                                  analogWrite(motorR1, 0);
+                                  analogWrite(motorR2, pwm);
+                                  analogWrite(motorL1, pwm*calibFactor);
+                                  analogWrite(motorL2, 0);
+                                  delay(time);
+                                }
+                              
+                                else{
+                                  analogWrite(motorR1, pwm);
+                                  analogWrite(motorR2, 0);
+                                  analogWrite(motorL1, 0);
+                                  analogWrite(motorL2, pwm*calibFactor);
+                                  delay(time);
+                                }
+                              
+                                //stop
+                                analogWrite(motorR1, 0);
+                                analogWrite(motorR2, 0);
+                                analogWrite(motorL1, 0);
+                                analogWrite(motorL2, 0);
+                              }
+                        </code>
+                    </pre>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embded/pKApEbIFqrQ?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
                     <h4>Adding turns</h4>
+
+                    <p>Once my straight driving was calibrated, I added in turning functions. The functions themselves were almost 
+                        exactly the same as what was written for straight driving. However where straight driving paired pins 0 and 5 or 
+                        1 and 4, turning paid 0 and 4 or 1 and 5 to allow one side of the car to go backwards and the other forwards, resulting 
+                        in a tight turn.
+                    </p>
+
+                    <pre>
+                        <code>
+                            void turn(int dir, int time, int pwm){
+                                //Drive straight for x seconds
+                                //Dir = 1 means right
+                                //Dir = -1 means left
+                                if(dir==1){
+                                  analogWrite(motorR1, pwm);
+                                  analogWrite(motorR2, 0);
+                                  analogWrite(motorL1, pwm);
+                                  analogWrite(motorL2, 0);
+                                  delay(time);
+                                }
+                              
+                                else{
+                                  analogWrite(motorR1, 0);
+                                  analogWrite(motorR2, pwm);
+                                  analogWrite(motorL1, 0);
+                                  analogWrite(motorL2, pwm);
+                                  delay(time);
+                                }
+                              
+                                //stop
+                                analogWrite(motorR1, 0);
+                                analogWrite(motorR2, 0);
+                                analogWrite(motorL1, 0);
+                                analogWrite(motorL2, 0);
+                              }
+                        </code>
+                    </pre>
+
+                    <p>
+                        I then programmed my robot to drive forward, and spin around. I also told it to continue going just to make sure that the 
+                        PWM signals did not conflict with each other after opposing movements.
+                    </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/5GDAwuVQY20?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
+                    <h4>Challenges- Issue with Pin 4</h4>
+
+                    <p>
+                        I noticed inconsistency with one side of my robot, in one specific direction. To me, this implied a soldering issue. I traced the 
+                        issue back to pin 4 based on the direction and side of inconsistency. Essentially, if programmed to go for 3 seconds with PWM through 
+                        pin 4, the left wheels would spin for maybe 1 second before stopping and stuttering, whereas the right side would keep going. 
+                        I checked all of my connections, and visually they seemed sound, as well as braided my cables to hopefully reduce signal interference. 
+                        So, I decided to re-hook up my system to the oscilloscope to see what was going on, since earlier testing indicated that all 4 pins worked 
+                        just fine.
+                    </p>
 
                 </div>
 
@@ -184,14 +399,27 @@
                 <div class="flex-grow-1">
                     <h3>Discussion</h3>
                         
-
+                    <p>
+                        This lab gave me a lot of practice with soldering and forced me to think about where things 
+                        would be placed within the robot. I thought that open loop control would be easy, but ended up finding 
+                        a lot of challenges. Fixing the drift was not too hard, just difficult to keep consistent, but debugging my 
+                        pin 4 issues was hard. With so many different factors such as the battery charge, friction from the ground, potential 
+                        soldering issues, signal noise, etc. it was hard to figure out what the source of my issue was. I am excited to implement 
+                        PID and try and get the robot to be more precise overall.
+                    </p>
                 </div>
             </div>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Bonus Dog Content</h3>
+
+                    <p>Part of my testing was done with Yen, a Guiding Eyes Dog in training :D. He was rather confused by the robot, though.</p>
                         
+                    <iframe width="560" height="315" src="https://youtube.com/embed/FyM4epahrwg?feature=share"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
 
                 </div>
             </div>
