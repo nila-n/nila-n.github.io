@@ -132,8 +132,10 @@
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen></iframe>
-
-                    <img src="images/Lab4/DC Power Supply.jpg" alt = "circuit diagram" width=40% />    
+                    
+                    <p>
+                        <img src="images/Lab4/DC Power Supply.jpg" alt = "circuit diagram" width=40% />
+                    </p>    
                         
                 </div>
             </div>
@@ -190,7 +192,12 @@
                         I incrementally increased PWM by 5 until I could see the robot start to move after being placed on the floor,
                         With a fresh battery this was around 40-45 PWM, but with a worn battery this was anywhere from 50-65 PWM. I am 
                         considering putting tape on my robot wheels to reduce the friction/rolling resistance it experiences and overall 
-                        ease the load on the motors.
+                        ease the load on the motors. That was for starting the car from rest. If the robot is already moving and stops, only 
+                        about 35 PWM was needed to accelerate from a coasting state.
+                    </p>
+                    <p>
+                        For turning, a higher PWM was needed. When I tested this, it took about 70 PWM to start turning from a resting state, with 
+                        a fully charged battery.
                     </p>
                     
                 </div>
@@ -200,10 +207,12 @@
                 <div class="flex-grow-1">
                     <h3>Open Loop Control</h3>
 
-                    <h4>Wiring</h4>
+                    <h4>Installation</h4>
                     <p>
                         First, I integrated everything into the robot. I tried to braid cable as much as possible to reduce noisy signals, 
-                        and ziptie wires together for cleanliness.
+                        and ziptie wires together for cleanliness. I am for now choosing to have one TOF in the front and one in the back- this means that 
+                        I only need to turn the robot 180 degrees to get 360 degrees worth of data. After taking this photo, I used electrical tape to 
+                        further clean up the wiring and keep things out of the way... 
                     </p>
 
                     <img src="images/Lab4/Robot.jpg" alt = "robot wired up" width=80% />
@@ -372,7 +381,8 @@
 
                     <p>
                         I then programmed my robot to drive forward, and spin around. I also told it to continue going just to make sure that the 
-                        PWM signals did not conflict with each other after opposing movements.
+                        PWM signals did not conflict with each other after opposing movements. Admittedly the drift started to come back here, but I believe 
+                        this is because my battery was dying by the time I recorded the video.
                     </p>
 
                     <pre>
