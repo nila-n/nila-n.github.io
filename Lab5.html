@@ -143,7 +143,8 @@
                         That is, the robot would always settle at some position +/- 1 inch from 1 foot from the wall. Usually, it ended up undershooting.
                         I ended up choosing a fairly small integrator value of 0.02 when my controller began to behave as desired. However, this made things 
                         pretty slow, so I actually thing I should reduce my integrator term to something 0.01 or lower (as in, an order of magnitude smaller than the P term) 
-                        so that the integrator has less of an effect and speed is not sacrificed, but lower steady state error is still achieved. Honestly, I think I could have just 
+                        so that the integrator has less of an effect and speed is not sacrificed, but lower steady state error is still achieved. This is supposed by my plot, 
+                        which shows small spikes in PWM as the robot settles. Small jumps in control like that are undesirable. Honestly, I think I could have just 
                         settled for a P controller, as the integral had less effect on accuracy I had hoped but definitely slowed down the loop a lot. The plots below are for the carpet tests, 
                         however for that case the wall buffer was set to 15 cm, not 25.4 which would be 1 foot. There was almost no steady state error, though! I also increased Kp by 0.01 to get 0.09.
                     </p>
@@ -204,7 +205,14 @@
                 <div class="flex-grow-1">
                     <h3>Speed Discussion</h3>
                         
-                    
+                    <p>
+                        My current PID controller runs pretty slowly. Originally, I only calculated new values if a TOF sensor reading was ready, 
+                        causing the loop to run every 98-100 ms which matches how fast the TOF runs which is at about 50 Hz. Adding an integrator further 
+                        slowed down the code. When I changed my code to have old PID values used when a new TOF reading isn't available, as well as when linear 
+                        extrapolation was used, the loop sped up by aboyt 20 ms. The photo below shows P control speeds in the very first iteration of the loop.
+                    </p>
+
+                    <img src="images/PID/time_btwn_samples.png" alt = "PI data" width=80% />
                 </div>
             </div>
 
@@ -212,6 +220,13 @@
                 <div class="flex-grow-1">
                     <h3>Discussion</h3>
 
+                    <p>
+                        This lab taught me about how to implement PI(D) control. In the case of linear control, only P control was needed for a sufficient controller, 
+                        however I added an integrator to try and reduce/eliminate steady state error. Since this slows down the loop, though, I may not keep it long term. I did not add 
+                        derivative control because I was experiencing derivative kick and would have needed to add a filter. Since my P and PI controllers were already good, I 
+                        opted against this due to time. My linear extrapolation code did not work very well and could use improvements. Overall, I learned a lot as I have studied the math 
+                        behind PID before but only implemented it once before this (using a very different method!)
+                    </p>
                     
 
                 </div>
