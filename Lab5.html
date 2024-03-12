@@ -43,6 +43,9 @@
                 speed, and we used the TOF sensors to stop a set distance from the wall. PID stands for proportional, integral, derivative control. Each term 
                 takes the error between the current position vs the desired position and adjusts motor PWM accordingly.
             </p>
+
+            <img src="images/PID/PID.jpg" alt = "PID math" width=80% />
+
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Prelab</h3>
@@ -72,8 +75,10 @@
                         Lastly, rather than send data live, I had a separate switch case that would loop over all arrays and send the data over bluetooth on command, 
                         rather than doing so live as we did in the past or immediately after the PID loop. Then, after running the loop and storing data points after certain 
                         intervals/measurements, I would bulk send over the data from a specific run and plot it, as will be seen below. I would then use this PWM and distance data to 
-                        help debug.
+                        help debug. On the python side, the notification handler was pretty much the same.
                     </p>
+
+                    <script src="https://gist.github.com/nila-n/b7695c13ce596f4616cce21fb843d3f3.js"></script>
                     
                 </div>
             </div>
@@ -83,8 +88,41 @@
                     <h3>P Control</h3>
 
                     <p>
-                        
+                        I started off by just writing and tuning a proportional controller. The P controller operated on the principle of checking error between 
+                        the goal distance from the wall and whatever current distance away the TOF sensor was reading. So, the further away from the target, the faster 
+                        the robot would go to try and make up for the deficit. If it overshot, it would go backwards.
                     </p>
+
+                    <script src="https://gist.github.com/nila-n/498fdf525d4b64be8a407eced256b5b0.js"></script>
+
+                    <h4>Tuning</h4>
+
+                    <p>
+                        Tuning the proportional control took quite a while. At first, I was using gain values of >1, which was far too high 
+                        considering that my error was in terms of mm and often quite large. It made the robot gun it at a full 255 for basically 
+                        the entire loop, and then overshoot and go in reverse at full speed again. My debugging script helped here, because it let me look 
+                        at the PWM values over time helped me understand that my gain was too high. 
+                    </p>
+
+                    <img src="images/PID/max speed 100/Kp 1.5.png" alt = "P data" width=80% />
+                    
+                    <iframe width="560" height="315" src="https://youtube.com/embed/aHDB_D8LlxA"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <p>
+                        After this, I tested gains below 1 and observed my performance. 0.02 was too low of a gain and the robot barely moved. On the tiles in upson, 
+                        a gain of about 0.04 was the best for Proportional control I did most of my testing on carpet, though, where 0.08 was my best gain. In those trials,  
+                        I capped my speed at 100 PWM because I had no cushiony material to protect my TOF sensor in the case of a crash. I did also test at higher speeds, 
+                        though, to make sure the logic still applied.
+                    </p>
+
+                    <img src="images/PID/Kp 0.08.png" alt = "P data" width=80% />
+                    <iframe width="560" height="315" src="https://youtube.com/embed/mK4Ieo5Xwp8?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
                         
                 </div>
             </div>
@@ -93,7 +131,37 @@
                 <div class="flex-grow-1">
                     <h3>PI Control</h3>
 
+                    <p>For PI control, my code did not change very much. I just needed to add a new term to my overall 
+                        PWM calculation that integrated error over time.
+                    </p>
                     
+                    <script src="https://gist.github.com/nila-n/fc93c426e4fc217bf6e372c5c6fa06f5.js"></script>
+
+                    <h4>Tuning</h4>
+                    <p>
+                        The goal of adding an integrator term was to eliminate steady state error that I observed from porportional control. 
+                        That is, the robot would always settle at some position +/- 1 inch from 1 foot from the wall. Usually, it ended up undershooting.
+                        I ended up choosing a fairly small integrator value of 0.02 when my controller began to behave as desired. However, this made things 
+                        pretty slow, so I actually thing I should reduce my integrator term to something 0.01 or lower (as in, an order of magnitude smaller than the P term) 
+                        so that the integrator has less of an effect and speed is not sacrificed, but lower steady state error is still achieved. Honestly, I think I could have just 
+                        settled for a P controller, as the integral had less effect on accuracy I had hoped but definitely slowed down the loop a lot. The plots below are for the carpet tests, 
+                        however for that case the wall buffer was set to 15 cm, not 25.4 which would be 1 foot. There was almost no steady state error, though! I also increased Kp by 0.01 to get 0.09.
+                    </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/ZsEeIvRIaRQ"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <img src="images/PID/Kp Ki 0.02 rly clean.png" alt = "PI data" width=80% />
+
+                    <h4>5000 Level Task - Integrator Windup</h4>
+                    <p>
+                        One risk of adding an integrator is integrator windup. That is, if there is a same-sign error for a really long time, or even a large sudden 
+                        change in error, the integrator can saturate and cause unwanted oscillating behavior and the P control will lose its effect. To combat this, 
+                        I capped my integral term at +/-200 based on the possible values of PWM. With a gain of 0.02, PWM could change by a maximum of 2 PWM due to the integrator. 
+                        Overall the P term dominated which is what I wanted.
+                    </p>
                     
                 </div>
             </div>
@@ -102,7 +170,31 @@
                 <div class="flex-grow-1">
                     <h3>Linear Extrapolation</h3>
 
-                    
+                    <p>
+                        The next task was to use linear extrapolation when TOF values were not available. To do this, as soon as at least 2 
+                        TOF values were collected, I would use those data points in between measurements to estimate the location of the robot. 
+                        I did this each time the loop was calculated, and then if TOF data was actually available I would overwrite the estimated PWM value 
+                        with a new PID calculation. In hindsight, this makes for inefficient code, because, it calculates PWM twice whenever a TOF value is available.
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/0ff2a66e2450ac063bab701e24b1bb87.js"></script>
+
+                    <p>
+                        When I tested this on the floor, I noticed a consistent overshoot and that the car did not correct itself 
+                        and go backwards. It just consistently settled too close to the wall. However, this was late into testing and I think my battery may have died.
+                        When I Serial printed, I noticed that the slope values were so large at high speeds that NaN would get returned, which to me indicates that something must 
+                        be wrong with my code, but I am not sure what.
+                    </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/i9ebv3uGgfM"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/zEJOvj5bhoU"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
 
                 </div>
 
