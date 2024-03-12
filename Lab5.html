@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html" style="color: rgb(255, 255, 255);">Lab 5: PID</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 5 <span class="text-primary">PID (Closed Loop Control)</span></h2>
+            <p class="mb-5">The purpose of this lab was to implement closed loop control through PID controllers. The state we controlled was 
+                speed, and we used the TOF sensors to stop a set distance from the wall. PID stands for proportional, integral, derivative control. Each term 
+                takes the error between the current position vs the desired position and adjusts motor PWM accordingly.
+            </p>
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Prelab</h3>
+                    <h4>Bluetooth</h4>
+
+                    <p>
+                        It was important for this lab to establish a strong data collection, debugging, and bluetooth system. As such, I modified my code 
+                        to operate via flags. I created a boolean, PID_ON, which was set to false by default. Then I created a switch case that could be used to 
+                        activate the PID command over bluetooth; if I called this function on the python side, PID_ON would be set to true, allowing for 
+                        data collection and the actual PID calculation to begin. Likewise, I had a STOP_PID switch case that would set that boolean to false.
+                        Then, in my main loop command, so long as the Artemis was connected via bluetooth, I would check for the state of these flags and act accordingly.
+                    </p>
+                    
+                    <script src="https://gist.github.com/nila-n/4b42f95e64eb528beca624df3d0d6b6c.js"></script>
+
+                    <script src="https://gist.github.com/nila-n/809fa7079c719bf965df4d4b2e567a8c.js"></script>
+
+                    <p>
+                        I also created a function that would allow me to change the gains over bluetooth while tuning my PID controller, 
+                        rather than reuploading the .ino code all of the time. I did not do this for the first few runs, and once I added this code 
+                        my life was truly changed.
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/0c2a993f40d7c6dc6bc767445ae4ef9e.js"></script>
+
+                    <p>
+                        Lastly, rather than send data live, I had a separate switch case that would loop over all arrays and send the data over bluetooth on command, 
+                        rather than doing so live as we did in the past or immediately after the PID loop. Then, after running the loop and storing data points after certain 
+                        intervals/measurements, I would bulk send over the data from a specific run and plot it, as will be seen below. I would then use this PWM and distance data to 
+                        help debug.
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>P Control</h3>
+
+                    <p>
+                        
+                    </p>
+                        
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>PI Control</h3>
+
+                    
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Linear Extrapolation</h3>
+
+                    
+
+                </div>
+
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Speed Discussion</h3>
+                        
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+
+                    
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
