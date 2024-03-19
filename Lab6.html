@@ -43,8 +43,6 @@
             <p class="mb-5">The purpose of this lab was to implement angular PID/orientation control of our robot such that it can correct itself after a disturbance to the system.
             </p>
 
-            <img src="images/PID/PID.jpg" alt = "PID math" width=80% />
-
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
                     <h3>Prelab</h3>
@@ -101,15 +99,15 @@
                         Data comparisons of a few different cases are shown below, as well as some videos.
                     </p>
 
-                    <img src="images/Angular PID/Kp = 3 Steady State Error Large.png" alt = "P data" width=80% />
+                    <img src="images/Angular PID/Kp = 3 Steady State Error Large.png" alt = "P data" width=50% />
                     
                     <iframe width="560" height="315" src="https://youtube.com/embed/bk_uoOeRoTQ?feature=share"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen></iframe>
 
-                    <img src="images/Angular PID/Kp = 4 steady state error mid.png" alt = "P data" width=80% />
-                    <img src="images/Angular PID/Kp = 4 twice in 1 go.png" alt = "P data" width=80% />
+                    <img src="images/Angular PID/Kp = 4 steady state error mid.png" alt = "P data" width=50% />
+                    <img src="images/Angular PID/Kp = 4 twice in 1 go.png" alt = "P data" width=50% />
 
                     <p>
                         These observations inspired me to add an integral controller to try and decrease my steady state error.
@@ -122,7 +120,7 @@
                         I found it a lot harder to reliably tune a controller on the rough surface. I think that the coefficient of friction (both static and kinetic, but 
                         especially the former) was just too high on the carpet to accurately tune my controller for both tiled and carpeted scenarios. The steady state error was often much 
                         higher than it was for tile, but increasing the gain would make it too high for tiled surfaces. Some videos are shown below, but I ultimately just 
-                        chose to test on campus instead.
+                        chose to test on campus instead. An example of a graph with some large overshoot is seen here- the video unfortunately does not match.
                     </p>
 
                     <img src="images/Angular PID/Large Gain, Overshoot, Carpet.png" alt = "P data" width=80% />
@@ -157,13 +155,13 @@
                         </code>
                     </pre>
 
-                    <img src="images/Angular PID/PI Ki = 0.15.png" alt = "PI data" width=80% />
+                    <img src="images/Angular PID/PI Ki = 0.15.png" alt = "PI data" width=50% />
                     <iframe width="560" height="315" src="https://youtube.com/embed/_pAvR5nmjsA?feature=share"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen></iframe>
 
-                    <img src="images/Angular PID/PI V1.png" alt = "PI data" width=80% />
+                    <img src="images/Angular PID/PI V1.png" alt = "PI data" width=50% />
                     <iframe width="560" height="315" src="https://youtube.com/embed/k1y5TGmxMKQ?feature=share"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -195,18 +193,18 @@
                     <p>
                         In my testing, though, I did not notice derivative kick, likely because I almost always started from a static position. Regardless, 
                         I was satisfied with the performance of my controller once I had a full PID loop. Where my linear control was fine with just PI, derivative control played a large role in 
-                        orientation control. Some results, as well as the full function, can be seen below.
+                        orientation control. Some results, as well as the full function, can be seen below. Adding a derivative term did slow down my overall settling time a bit, though, which I did not like.
                     </p>
 
                     <script src="https://gist.github.com/nila-n/39d19a1b362425fc1d69e0ec46def004.js"></script>
 
-                    <img src="images/Angular PID/PID V3.png" alt = "PID data" width=80% />
+                    <img src="images/Angular PID/PID V3.png" alt = "PID data" width=50% />
                     <iframe width="560" height="315" src="https://youtube.com/embed/YZFpkF-Hiac?feature=share"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen></iframe>
 
-                    <img src="images/Angular PID/PID V4.png" alt = "PID data" width=80% />
+                    <img src="images/Angular PID/PID V4.png" alt = "PID data" width=50% />
                     <iframe width="560" height="315" src="https://youtube.com/embed/Olgn6fy76Hw?feature=share"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
