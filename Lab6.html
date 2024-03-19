@@ -55,7 +55,21 @@
                     <p>
                         To handle the IMU, I just added new cases and a new set of boolean flags to check whether angular PID should be on or off. T make my life easier, I also added cases that would 
                         allow me to change my setpoint, similar to how I change my gain, by passing in and parsing a string. I also modified my notification handler to accept the PWM and IMU values in the angular case, 
-                        so that if both feedback loops run at once, I can still get all the data. If the flag PID_ANG_ON was set to true and the bluetooth was connected, then my PID function would be called.                    </p>
+                        so that if both feedback loops run at once, I can still get all the data. If the flag PID_ANG_ON was set to true and the bluetooth was connected, then my PID function would be called repeatedly. 
+                        An overview of my different cases:
+                        <ul>
+                            <li>Start Linear PID</li>
+                            <li>Stop Linear PID</li>
+                            <li>Start Angular PID</li>
+                            <li>Stop Angular PID</li>
+                            <li>Change Linear Setpoint</li>
+                            <li>Change Angular Setpoint</li>
+                            <li>Change Linear Gain</li>
+                            <li>Change Angular Gain</li>
+                            <li>Change Max Speed</li>
+                            <li>Send Data</li>
+                        </ul>
+                    </p>
 
                     <script src="https://gist.github.com/nila-n/baad573eb8cdb41dd55e09b1570e9a05.js"></script>
 
