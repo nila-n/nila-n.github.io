@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: PID</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html" style="color: rgb(255, 255, 255);">Lab 5: Orientation Control</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 5 <span class="text-primary">Orientation Control</span></h2>
+            <p class="mb-5">The purpose of this lab was to implement angular PID/orientation control of our robot such that it can correct itself after a disturbance to the system.
+            </p>
+
+            <img src="images/PID/PID.jpg" alt = "PID math" width=80% />
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Prelab</h3>
+                    <h4>Bluetooth</h4>
+
+                    <p>
+                        Please reference my Lab 5 report for a breakdown of my debugging and bluetooth communication, as I followed the same process here.
+                    </p>
+                    
+                    <p>
+                        To handle the IMU, I just added new cases and a new set of boolean flags to check whether angular PID should be on or off. TO make my life easier, I also added cases that would 
+                        allow me to change my setpoint, similar to how I change my gain, by passing in and parsing a string. I also modified my notification handler to accept the PWM and IMU values in the angular case, 
+                        so that if both feedback loops run at once, I can still get all the data. If the flag PID_ANG_ON was set to true and the bluetooth was connected, then my PID function would be called.                    </p>
+
+                    <script src="https://gist.github.com/nila-n/baad573eb8cdb41dd55e09b1570e9a05.js"></script>
+
+                    <script src="https://gist.github.com/nila-n/ac6f7cbd840089fe44d8905695646cb8.js"></script>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>P Control</h3>
+
+                    <p>
+                        Similar to linear PID, I started with just a proportional controller, meaning that my pwm output was just based on error and 
+                        the gain value that I tuned:
+
+                        <pre>
+                            <code>
+                                error_ang = theta - targetTheta;
+
+                                float Pterm = Kp_ang * error_ang;
+                            </code>
+                        </pre>
+                    </p>
+
+                    <p>
+                        With just P control, I noticed two main issues.
+                        <ul>
+                            <li>
+                                I consistently had a steady state error of about 10 degrees. Even as I kept increasing Kp, the error would only decrease 
+                                so much before the robot would just jitter around (pwm too low; I ended up saying that if the pwm was any lower than 10% of max speed, 
+                                that the robot should just remain stationary.).
+                            </li>
+                            <li>
+                                Too large a gain just ended up in large overshoot (which is expected, based on how PID works).
+                            </li>
+                        </ul>
+                    </p>
+
+                    <p>
+                        Data comparisons of a few different cases are shown below, as well as some videos.
+                    </p>
+
+                    <p>
+                        These observations inspired me to add an integral controller to try and decrease my steady state error.
+                    </p>
+
+                    <h4> Carpet Woes :<</h4>
+
+                    <p>
+                        Most of my initial P-tuning happened on carpet. However since my testing involve disturbing the robot from a static position, 
+                        I found it a lot harder to reliably tune a controller on the rough surface. I think that the coefficient of friction (both static and kinetic, but 
+                        especially the former) was just too high on the carpet to accurately tune my controller for both tiled and carpeted scenarios. The steady state error was often much 
+                        higher than it was for tile, but increasing the gain would make it too high for tiled surfaces. Some videos are shown below, but I ultimately just 
+                        chose to test on campus instead.
+                    </p>
+                        
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>PI Control</h3>
+
+                    <p>
+                        Next, I added an integral controller to try and get rid of steady state error. I tried a few different integral gains, and settled in the range of: 0.2, 0.25, and 0.15. At any lower integral gain, 
+                        I did not see an effect. But any higher, and there were just too many oscillations and the robot would not quite settle. It ultimately improved my steady state 
+                        error, but added so much extra oscillation that I decided to add a derivative controller to try and combat this.
+                    </p>
+
+                    <pre>
+                        <code>
+                            float dt = 35; //100 ms
+                            sumError_ang = sumError_ang + error_ang*dt;
+
+                            float Iterm = Ki_ang * sumError_ang;
+                            if(Iterm > 150)
+                                Iterm = 150;
+                            else if(Iterm < -150)
+                                Iterm = -150;
+                        </code>
+                    </pre>
+
+                    <h4> Integrator Windup (500 Level) </h4>
+                    <p>
+                        I also took integrator windup into account, since I did not want my controller to saturate. I monitored the contribution from my Iterm over time 
+                        for a few runs and ended up capping my integral term at +/-200 based on the possible control outputs. At a control gain of 0.25, this means the I control 
+                        can contribute no more than 50 PWM.
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>PID Control</h3>
+
+                    <p>
+                        To try and reduce oscillations, I then added a derivative control. Any value between 0.5 and 0.7 seemed to improve performance, but the higher 
+                        the derivative gain value, the faster and thus better the performance of the controller was overall. My most successful/smooth run had Kp = 4.0, Ki = 0.25 and kd = 0.7. 
+                        It is worth noting that after adding derivative gain I actually decreased the proportional gain a bit to decrease the initial overshoot. The controller itself is still 
+                        slower than I would like it to be, so some additional tuning may be needed. One issue that still needs to be addressed is derivative kick if the setpoint is to be changed quickly, 
+                        such as in the case of a fast turn followed by straight driving; if I was to try and fix this, I would try to track the setpoint over time, such that the D term was based on 
+                        rate of change in setpoint as well as error...
+                    </p>
+
+                    <p>
+                        In my testing, though, I did not notice derivative kick, likely because I almost always started from a static position. Regardless, 
+                        I was satisfied with the performance of my controller once I had a full PID loop. Where my linear control was fine with just PI, derivative control played a large role in 
+                        orientation control. Some results, as well as the full function, can be seen below.
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/39d19a1b362425fc1d69e0ec46def004.js"></script>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Speed Discussion</h3>
+                        
+                    <p>
+                       My controller ran approximately as fast as the IMU sensor itself. Unlike the linear PID which took about 100 ms between iterations, 
+                       the angular PID calculated new values every 40ms.
+                    </p>
+
+                    <img src="images/PID/time_btwn_samples.png" alt = "PI data" width=80% />
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+
+                    <p>
+                        Ultimately, I found it harder to tune angular control than linear control. I actually needed deriviative control this time, and 
+                        experienced a slower settling time and larger oscillations, still. I am hoping to make my controller smoother in the future.
+                    </p>
+                    
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
