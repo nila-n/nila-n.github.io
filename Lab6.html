@@ -55,7 +55,7 @@
                     </p>
                     
                     <p>
-                        To handle the IMU, I just added new cases and a new set of boolean flags to check whether angular PID should be on or off. TO make my life easier, I also added cases that would 
+                        To handle the IMU, I just added new cases and a new set of boolean flags to check whether angular PID should be on or off. T make my life easier, I also added cases that would 
                         allow me to change my setpoint, similar to how I change my gain, by passing in and parsing a string. I also modified my notification handler to accept the PWM and IMU values in the angular case, 
                         so that if both feedback loops run at once, I can still get all the data. If the flag PID_ANG_ON was set to true and the bluetooth was connected, then my PID function would be called.                    </p>
 
@@ -101,6 +101,16 @@
                         Data comparisons of a few different cases are shown below, as well as some videos.
                     </p>
 
+                    <img src="images/Angular PID/Kp = 3 Steady State Error Large.png" alt = "P data" width=80% />
+                    
+                    <iframe width="560" height="315" src="https://youtube.com/embed/bk_uoOeRoTQ?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <img src="images/Angular PID/Kp = 4 steady state error mid.png" alt = "P data" width=80% />
+                    <img src="images/Angular PID/Kp = 4 twice in 1 go.png" alt = "P data" width=80% />
+
                     <p>
                         These observations inspired me to add an integral controller to try and decrease my steady state error.
                     </p>
@@ -114,6 +124,12 @@
                         higher than it was for tile, but increasing the gain would make it too high for tiled surfaces. Some videos are shown below, but I ultimately just 
                         chose to test on campus instead.
                     </p>
+
+                    <img src="images/Angular PID/Large Gain, Overshoot, Carpet.png" alt = "P data" width=80% />
+                    <iframe width="560" height="315" src="https://youtube.com/embed/BzpA7SC3blU?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
                         
                 </div>
             </div>
@@ -140,6 +156,18 @@
                                 Iterm = -150;
                         </code>
                     </pre>
+
+                    <img src="images/Angular PID/PI Ki = 0.15.png" alt = "PI data" width=80% />
+                    <iframe width="560" height="315" src="https://youtube.com/embed/_pAvR5nmjsA?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <img src="images/Angular PID/PI V1.png" alt = "PI data" width=80% />
+                    <iframe width="560" height="315" src="https://youtube.com/embed/k1y5TGmxMKQ?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
 
                     <h4> Integrator Windup (500 Level) </h4>
                     <p>
@@ -171,6 +199,18 @@
                     </p>
 
                     <script src="https://gist.github.com/nila-n/39d19a1b362425fc1d69e0ec46def004.js"></script>
+
+                    <img src="images/Angular PID/PID V3.png" alt = "PID data" width=80% />
+                    <iframe width="560" height="315" src="https://youtube.com/embed/YZFpkF-Hiac?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <img src="images/Angular PID/PID V4.png" alt = "PID data" width=80% />
+                    <iframe width="560" height="315" src="https://youtube.com/embed/Olgn6fy76Hw?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
                     
                 </div>
             </div>
@@ -184,7 +224,6 @@
                        the angular PID calculated new values every 40ms.
                     </p>
 
-                    <img src="images/PID/time_btwn_samples.png" alt = "PI data" width=80% />
                 </div>
             </div>
 
