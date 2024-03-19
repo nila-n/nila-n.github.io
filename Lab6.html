@@ -31,7 +31,7 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: PID</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: Speed Control</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html" style="color: rgb(255, 255, 255);">Lab 5: Orientation Control</a></li>
                 </ul>
             </div>
@@ -231,7 +231,11 @@
 
                     <p>
                         Ultimately, I found it harder to tune angular control than linear control. I actually needed deriviative control this time, and 
-                        experienced a slower settling time and larger oscillations, still. I am hoping to make my controller smoother in the future.
+                        experienced a slower settling time and larger oscillations, still. I am hoping to make my controller smoother in the future. I would also like 
+                        to make the time constant of the system much smaller/make the overall response faster. Proportional control was very fast, but always undershot. 
+                        Adding integral control helpe dget rid of steady state error, but with a lot of dancing and oscillating. Derivative control eased up the oscillations, 
+                        but my settling time is still high. I need to keep working on making my system faster for when we do stunts. Perhaps the Kalman filter/prediction methods will 
+                        help with this...
                     </p>
                     
 
