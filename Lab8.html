@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: Speed Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html">Lab 6: Orientation Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab7.html">Lab 7: Kalman Filter</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab8.html" style="color: rgb(255, 255, 255);">Lab 8: Stunt!</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 8 <span class="text-primary">Stunt!</span></h2>
+            <p class="mb-5">The goal of this lab was to improve on past controllers in order to be able to perform a stunt. I chose to do the drifting stunt involving orientation control. 
+                I tried the stunt with many methods, in particular by trying to implement a Kalman Filter, but for the final version settled with improving my PID control.
+            </p>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Modifying Orientation Control</h3>
+                    
+                    <p>
+                        In order to coordinate the drifting stunt, I needed to enable several flags to separate the different movements: driving forwards, 
+                        turning 180 degrees, and then driving forwards again. I used a mixture of TOF readings and linear extrapolation (which I was able to fix after it did not 
+                        work in lab 5!) to determine my distance from the wall. Once I was within 3 feet, I would flip a set of boolean flags to indicate that driving forward had ended, and 
+                        it was time to turn. For turning, I ran a very similar angular PID from my Lab 6, however I had to slightly retune my gains after taping up the wheels. The result of a successful stunt 
+                        are shown below:
+                    </p>
+
+                    <img src="images/Stunt_Graph_1.png" alt = "Dynamics" width=50% />
+
+                    <p>
+                        Some things I implemented in order to speed up my code was:
+                        <ul>
+                            <li>Increasing the pwm threshold required to make the robot turn to prevent too much oscillation that the integral controller can sometimes cause.
+                                 This led for a smoother and faster turn overall by essentially establishing a cutoff for an 'okay enough turn'</li>
+                            <li>Adding linear extrapolation for estimating distance between TOF readings</li>
+                        </ul> 
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/4a81b3806b872b40ad65a0d1507fde06.js"></script>
+
+                    <p>
+                        Ultimately, the stunt was slower than I would have liked and the gyro exhibited some drift (data indicates about 160 degree turn, but visually I saw 180 degrees consistently).
+                        However, I am still happy with the overall performance.
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Failed Kalman Filter oof</h3>
+
+                    <p>
+                        I spent a long time in this lab trying to implement a Kalman filter on the robot. I tried many implementations/restructuring of the code to try 
+                        and verify the matrix math, but ultimately could not get it to work. It seems that my predict step was not working/the dynamics were never propogating forward, causing 
+                        later issues with my update step and the filter as a whole. This was pretty disappointing, and I ended up spending several days on it before switching back to PID. I hope to still finish 
+                        implementing the Kalman filter eventually in order to explore other filters for other classes of mine. The (broken) code is shown below...
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/a8b6b8d8d2c8a9e2b86a86a672e93eb8.js"></script>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
