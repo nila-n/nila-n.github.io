@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: Speed Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html">Lab 6: Orientation Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab7.html">Lab 7: Kalman Filter</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab8.html">Lab 8: Stunt</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab9.html" style="color: rgb(255, 255, 255);">Lab 9: Mapping</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 9 <span class="text-primary">Mapping</span></h2>
+            <p class="mb-5">The goal of this lab was to use sensor data and transformation matrices in order to create a map of the in-lab arena..
+            </p>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Gathering Data</h3>
+                    
+                    <p>
+                        In order to collect 360 degree data, I used orientation control to incrementally rotate by robot in a full circle in 10 degree segments. 
+                        I limited each turn to 500 ms in order to avoid too much oscillation due to the integral and derivative control aspects. After the turn was completed, 
+                        the robot would stay in place and collect 4 data points for each TOF sensor. Because my TOF sensors are 180 degrees apart (one on front and one on the back of the bot) this gave me 
+                        two datasets from which to estimate the map and get an average reading from. Each TOF would provide a mirrored version of that location relative to the other. Similar to past labs, 
+                        I used boolean flags to control the mapping process, however I could have done it all within the switch case.
+                    </p>
+                    <p>
+                        A big challenge was making sure my robot actually spun on axis to get as accurate a set of readings as possible. I managed this in two ways: (1) making the robot spin 
+                        pretty slowly and (2) adding a "calibration" constant of sort to my turning function, so that the right side of motors were always powered with a PWM that was 5 less than the left motors. 
+                        The code I used is shown below, plus a video of the robot collecting data...
+                    </p>
+                    
+                    <script src="https://gist.github.com/nila-n/db6bd06217f03da0694b5546e468c3fb.js"></script>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/mnqzrjeP1Ok?feature=share"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe> 
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Preliminary Plotting + Transformation Matrices</h3>
+
+                    <p>
+                        I placed the robot at each spot in the arena and ran my mapping command at each location. I then plotted the TOF data in a polar plot against the 
+                        yaw data (in radians! I first did degrees and it looked crazy...). From this, I could already see the shape of the room starting to come together.
+                    </p>
+
+                    <img src="images/Map/(-3, -2) 1.png" alt = "(-3, 2) Data" width=50% />
+                    <img src="images/Map/(-0,3) 1.png" alt = "(0, 3) Data" width=50% />
+                    <img src="images/Map/(5, 3) 1.png" alt = "(5, 3) Data" width=50% />
+                    <img src="images/Map/(5, -3) 1.png" alt = "(5, -3) Data" width=50% />
+
+                    <p>
+                       After collecting the data, I began working on transformation matrices to be able to go from polar to cartesian coordinates. I applied the following to each data point:
+                        x = distance * cos(theta) and y = distance * sin(theta). From there, I offset the values by the coordinate from which that data point was taken (for example, (-3, -2) had me subtracting 
+                        3*304.8mm from x and 2*304.8mm from y). Some transformations also had different signs as needed, to get the correct orientation. The code for that is shown below.
+                    </p>
+
+                    <img src="images/Map/transformation matrix.jpg" alt = "matrices" width=50% />
+
+                    <script src="https://gist.github.com/nila-n/ecd85a6a5d11e3294492fb20dcb88b57.js"></script>
+
+                    <img src="images/Map/(5,3) transform.png" alt = "matrices" width=50% />
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Full Map + Corrections</h3>
+
+                    <p>
+                        After transforming all sets of data, I combined them into a single map. From here, I could already start to see the room take shape.
+                    </p>
+
+                    <img src="images/Map/Map.png" alt = "matrices" width=50% />
+
+                    <p>
+                        Based on clusters of points, I was able to establish coordinates and draw a box around the perimeter of the area and the obstacles:
+                    </p>
+
+                    <img src="images/Map/Line Map.png" alt = "matrices" width=50% />
+
+                    <script src="https://gist.github.com/nila-n/f017e5afae5e36b64f3c713c6bfa15e2.js"></script>
+
+                    <p>
+                        I noticed two main things about my map:
+                        <ul>
+                            <li>It was not perfectly straight, which is most easily seen by the corners (specifically the (-3, -2) data)</li>
+                            <li>The two boxes in the area were not particularly well detected, specifically by the data take at (5, -3). There is a cluster of red points 
+                                that could be from the box, but ultimately fall short. This means that in my map, the object appears way larger.</li>
+                        </ul>
+                    </p>
+
+                    <p>
+                        The first issue there can be fixed. I went back and offset the yaw values from each data set until I saw better results. I imagine that this slight variation 
+                        is due to two things. First, small differences in initial orientation would read to slightly different offsets on the final transformed readings. And secondly, 
+                        gyro drift may have come into play for the last portion of the rotations, or any slight spinning off axis could mess things up. I ended up offsetting each point by the following 
+                        angles. Again, (5, -3) was the worst:
+                        
+                        <ul>
+                            <li>(-3, -2): -6 degrees</li>
+                            <li>(0, 3): 8 degrees</li>
+                            <li>(5, 3): 2 degrees</li>
+                            <li>(5, -3): 14 degrees</li>
+                        </ul>
+
+                    </p>
+
+                    <p>
+                        Adding these offsets did end up helping the outer perimeter of the map quite a bit, though. Here is the new map:
+                    </p>
+
+                    <img src="images/Map/Corrected Map.png" alt = "matrices" width=50% />
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+
+                    <p>
+                        This lab showed how sensor data can be used not only to predict robot dynamics, but to understand the local environment. The transformation 
+                        matrices were very powerful in taking indict data of the room and turning it into a detailed map. I enjoyed this lab!
+                    </p>
+                    
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
