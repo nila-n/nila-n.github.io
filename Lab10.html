@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: Speed Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html">Lab 6: Orientation Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab7.html">Lab 7: Kalman Filter</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab8.html">Lab 8: Stunt</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab9.html">Lab 9: Mapping</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab10.html" style="color: rgb(255, 255, 255);">Lab 10: Bayes Filter (Sim)</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 9 <span class="text-primary">Mapping</span></h2>
+            <p class="mb-5">The goal of this lab was to use Bayes Filter and odometry to implement grid localization..
+            </p>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>About the Bayes Filter</h3>
+
+                    <p>
+                        The Bayes filter takes in control input, sensor measurements, and "belief" of where the robot is to determines
+                        the robot position on a pre-determined grid. For any given location, there is a probability that the robot is actually there 
+                        based on it's previous location as well as the ideal control action it would take to get to said new location. Similar to the 
+                        Kalman filter (which, if anything the KF is a subset of Bayes), the Bayes filter has both a prediction step and an update step 
+                        once data has come in (prior vs posterior).
+                    </p>
+
+                    <img src="images/Bayes/Bayes Filter.png" alt = "Bayes Algo" width=80% />
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Compute_Control</h3>
+
+                    <p>
+                        The robots motions/actions are predicted using odometry. This essentially splits any movement into the sum of three smaller movements. 
+                        First, a rotation of the robot in the direction of its final destination. Next, a translation to that new location. And lastly, a second rotation 
+                        to correct the robots orientation. We calculate this with the function compute_control, which takes in the robots current and previous poses in as an input. 
+                        Each pose is actually a tuplet of (x,y,theta).
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/ed08221ef3a6d94465ab513b64f20289.js"></script>
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Odom_Motion_Model</h3>
+
+                    <p>
+                        The above function just calculated the three relative motions needed to go between two points. For the actual odometry 
+                        motion model, two possible paths must be compared: the "actual" action the robot took, based on odometry readings, versus the "ideal" 
+                        motions the robot would take based on it's previous states. For this code/model, we treat the ideal state as a Gaussian distribution, and 
+                        compare the actual actions taken to determine a probability p(x'|x, u). Essentially, the ideal location of the robot x, given control u, is the mean or
+                        center of the gaussian distribution. We can then check the probability that the robot is actually at location x', and do this for each movement (rotation 1, 
+                        translation, rotation 2). We assume each movement is an independent event.
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/c0fa0755842a0eeaffc8b587a029e885.js"></script>
+
+                    <img src="images/Bayes/Odom Motion Model.png" alt = "Odom Model" width=80% />
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Prediction_Step</h3>
+
+                    <p>
+                        The prediction step goes through every possible previous robot state, x_(t-1), and figures out the probability that the robot will be in some current state x_t, given the 
+                        belief the robot was in the state x_(t-1) and a control action. We must check all 12 x grid locations, all 9 y locations, and all 18 discretized 
+                        angles. The result of the prediction step is a new belief, bel_bar, which represents the predicted uncertainty that the robot is in the new location x_t. 
+                        This function get's computationally expensive because it has to loop through every single location, so I added an if statement to ignore any previous location x_(t-1) with 
+                        a belief of less than 0.0001. I increased this up to 0.001 and I think it did make my filter slightly faster.
+
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/1dcd16cb1d6d37494aea2919fd095100.js"></script>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Sensor_Model</h3>
+
+                    <p>
+                        Next came the sensor model, which defines the probability p(z|x). This function defines a gaussian distribution centered around the true observation and 
+                        a predefined variance, loc.sensor_sigma. For 18 measurements (robot spins in a circle) it determines the likelihood of a specific measurement given the 
+                        current state.
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/ed910c9e5af50fc5e8be807a315b9bc2.js"></script>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Update_Step</h3>
+                    
+                    <p>
+                        Finally came the update step. It takes the predicted belief, bel_bar, and updates it based on sensor values. 
+                        To do this calculation you need to loop through all possible locations and run the sensor model function to determine the 
+                        probability of getting the current measurement, and multiply it by the belief that you are at that grid location. After this, the 
+                        final belief can be normalized and used to estimate position.
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/44f6d8770332eda5389457515b390d74.js"></script>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Simulation</h3>
+
+                    <p>
+                        Results are shown below.
+                    </p>
+
+                    <iframe width="560" height="315" src="https://youtube.com/embed/hb4DKy1JF3w"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+
+                    <img src="images/Bayes/Bayes.png" alt = "Bayes Result" width=100% />
+
+                    <p>
+                        The odometry model alone (red) is pretty terrible/inaccurate. However comparing the belief (blue) with the true location (green) shows that 
+                        despite how bad the odometry is, the ultimate prediction from the Bayes filter converges pretty quickly and is quite accurate. It was most inaccurate 
+                        atthe top right corner of the map, but was still able to correct itself and converge back very fast. It is also slightly less accurate at the center/origin 
+                        of the grid, maybe due to symmetry. Overall, though, I think it performed very well.
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+
+                    <p>
+                        The Bayes filter is very powerful. It has a similar structure to the Kalman filter, but is more forgiving with the dynamics of the system since 
+                        it does not require linear gaussian systems. I was able to simulate/estimate robot precision with high accuracy even with a fairly inaccurate
+                         odometry model, which shows how good the Bayes filter can be!
+
+                    </p>
+                    
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
