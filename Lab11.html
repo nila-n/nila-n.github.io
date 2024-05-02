@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: Speed Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html">Lab 6: Orientation Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab7.html">Lab 7: Kalman Filter</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab8.html">Lab 8: Stunt</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab9.html">Lab 9: Mapping</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab10.html">Lab 10: Localization (Sim)</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab11.html" style="color: rgb(255, 255, 255);">Lab 11: Localization (Real)</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 11 <span class="text-primary">Bayes Filter Simulation (Real)</span></h2>
+            <p class="mb-5">The goal of this lab was to use the update step of the Bayes Filter and Localize in real life.
+            </p>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Robot Issues</h3>
+
+                    <p>
+                        Unfortunately, in the process of trying to do this lab, I had many many issues eventually resulting in the retirement of my dear robot, Jombo. 
+                        After overcoming initial bluetooth issues because of my operating system, in the process of testing my robot, something most likely happened to either 
+                        the motors or the motor drivers that caused either too large a current draw or some kind of short in the system. I ended up burning through one Artemis' 
+                        voltage regulator, and after replacing it and resoldering most of my component connections, I was still experiencing hard faults any time I ran code, even from old labs. I isolated each system 
+                        one, and was able to see that the sensors still worked, but any time I would send a signal to my motors I would reach a hard fault and the board would heat up. Ultimately, it 
+                        was determined that my robot's motors or the motor drivers had some kind of issue with them that was shorting the board, and rather than continue debugging I opted to 
+                        use my lab 9 data to run my Bayes' filter. For Lab 12, I will work will someone else. R.I.P to my robot, I will be adding an in memorium page to commemorate his hard work.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Implementation</h3>
+
+                    <p>
+                        My plan was to use essentially the same code as I did for mapping in Lab 9, but turning in 20 degree increments rather than 10. I would also, 
+                        rather than sending all data points from each spot (I was collecting 5), average them all together on the Artemis side instead of the python side since the 
+                        Bayes script was expecting 18 data points. The code for the python side that I was planning on using is shown below.
+
+                        <script src="https://gist.github.com/nila-n/6764585787dd2b609ece7baaa01925ad.js"></script>
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Results Using lab 9 Data</h3>
+
+                    <p>
+                        First, I ran the simulation as is to make sure it worked, and it did.
+                    </p>
+
+                    <img src="images/Bayes Real/Sim Results.png" alt = "Sim Results" width=80% />
+
+                    <p>
+                        These are the results at each point using my (transformed and 'normalized' to the origin) data points
+                    </p>
+
+                    <img src="images/Bayes Real/(-3, -2).png" alt = "Bayes Algo" width=80% />
+                    <img src="images/Bayes Real/(0, 3).png" alt = "Bayes Algo" width=80% />
+                    <img src="images/Bayes Real/(5, 3).png" alt = "Bayes Algo" width=80% />
+                    <img src="images/Bayes Real/(5,-3).png" alt = "Bayes Algo" width=80% />
+
+                    <p>
+                        The robot localized perfectly at all locations except for (5, 3) where it was off by about a foot in either direction. I think this is 
+                        likely because the robot shifted off axis for that data set, however since my robot did not work, I was unable to collect more data.
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+
+                    <p>
+                        I found this lab pretty straightforward in theory. Basically all of the code for it was set up during Labs 9 and 10, so there was not much 
+                        work to be done other then enable bluetooth communication while localizing. Honestly, I am just sad/annoyed that my robot broke considering how 
+                        close to the end I was. I look forward, though, to trying to implement the Bayes filter and path planning for Lab 12 with a partner.
+                    </p>
+                    
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
