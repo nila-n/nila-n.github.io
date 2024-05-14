@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Nila Narayan - Fast Robots</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">Nila Narayan</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="images/profile-pic.jpg" alt="..." /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1a.html">Lab 1a: Artemis</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab1b.html">Lab 1b: Bluetooth</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab2.html">Lab 2: IMU</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab3.html">Lab 3: TOF</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab4.html">Lab 4: Motor Drivers, Open Loop Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab5.html">Lab 5: Speed Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab6.html">Lab 6: Orientation Control</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab7.html">Lab 7: Kalman Filter</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab8.html">Lab 8: Stunt</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab9.html">Lab 9: Mapping</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab10.html">Lab 10: Localization (Sim)</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab11.html">Lab 11: Localization (Real)</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="Lab12.html" style="color: rgb(255, 255, 255);">Lab 12: Path Planning</a></li>
+                </ul>
+            </div>
+        </nav>
+    <!-- Page Content-->
+    <section class="resume-section" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-2">Lab 12 <span class="text-primary">Path Planning</span></h2>
+            <p class="mb-5">The goal of this lab was to navigate an arena and go from waypoint to waypoint using localization and feedback controls.
+            </p>
+
+            <h3>Shoutout to Daria! We worked together on this lab.</h3>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>The Plan</h3>
+
+                    <p>
+                        This lab combines several different skills we used throughout the semester. We planned to rely heavily on orientation control, both for 
+                        localizing and for moving around the arena.
+                    </p>
+
+                    <img src="images/Lab 12/goal.png" alt = "Sim Results" width=80% />
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Implementation</h3>
+
+                    <h2>Waypoint 1->2 + Open vs Closed Loop Control</h2>
+                    <p>We chose to hard code the motion between waypoint 1 and 2, because the exact angle and distance required is already known 
+                        without localization. We used orientation control to turn 45 degrees and open loop control to drive forward to the next point.
+                    </p>
+                    <p>
+                        It is worth discussing why we used open loop control for all linear/translational motion. We chose this rather than linear PID/kalman 
+                        filter with TOF data, because not all waypoints had strong reference points for the sensor to ping off of. Originally, we had the time be 
+                        proportional to the distance needed to travel, based on the calculated trajectory function I will be discussing next. However, this proved fairly 
+                        inconsistent, and turned to hard coding based on known characteristics of the robot and the known distances from waypoint to waypoint. Even though 
+                        the robot didn't always travel to the correct spot and would relocalize, we found the angle to be more important than the distance travelled. The open loop 
+                        control was actually better at handling inconsistencies than the proportional timing.
+                    </p>
+
+                    <h2>Calculating Trajectory + Bayes Filter</h2>
+
+                    <p>
+                        This was arguably the most important function of this lab. After localizing, the Bayes Filter would calculate a belief of the robot's location 
+                        on the python side. Also on the python side, we would use the current belief (x-bar, y-bar) and the next waypoint (x, y) to determine a trajectory to travel there 
+                        in the form of an angle and a distance, similar to odometry but missing the last step. We omitted the second rotation because the robot always reset to zero degrees for localization 
+                        at a new location, anyways.
+                    </p>
+
+                    <p>
+                        The function itself was just based on geometry, and can be seen below. We chose to implement it on the python side because we felt it would be faster/less computationally heavy 
+                        for the Artemis...
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/eb6bb699baf39b0ad208d419cd65125f.js"></script>
+
+                    <h2>Plan, Summarized</h2>
+                    <p>The waypoints: start -> (-4, -3) -> (-2, -1) -> (1, -1)
+                        -> (2, -3) -> (5, -3) -> (5, -2) -> (5, 3) -> (0, 3) -> (0, 0) <-end</p>
+                    <p>
+                        The plan then became as follows, in pseudocode:
+                    </p>
+
+                    <code>
+                        start
+                        orientation_pid(45 degrees)
+                        forward(to get to waypoint)
+
+                        now at waypoint 2
+                        while(there are still waypoints remaining){
+                            orientation_pid(return to 0 degrees)
+                            localize!
+
+                            (x_bar, y_bar) = run bayes filter update step
+                            (goal_x, goal_y) = next waypoint from list
+                            calculate_trajectory(current coords, goal coords)
+                            orientation_pid(face next waypoint)
+                            forward(to get to waypoint)
+                        }
+                        
+                        end, should be at origin!
+                    </code>
+                    
+                    <h2>Python Loop</h2>
+                    <p>
+                        As python code, the above plan ended up like this:
+                    </p>
+                    <script src="https://gist.github.com/nila-n/a809a6100df12afbbb0a15365d7e1d18.js"></script>
+                    <p>
+                        In practice/testing, while localizing, the robot would always seem to turn an extra ~55 degrees (but not collect data for it). As such, we had to add in a correction 
+                        term to account for this. We experimented with doing this on both the python side and the Artemis side, as will be discussed later.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Results!</h3>
+
+                    <p>
+                        In the end, we only got in one successful-ish run. In reality it was more of a successful half-run. We found that our beliefs and calculated trajectories were 
+                        were strong at the start, and the video shown displaces how the first 2-3 waypoints were fairly successful. However, eventually localization would be a little bit 
+                        off axis, and the aforementioned overturning would mess with both the calculated belief and the calculated trajectory. This, combined with the fact that our linear motions 
+                        were hard-coded, meant that this propagation of error eventually made theoverall motions of the robot less accurate, until it was essentially stuck behind one of the obstacles.
+                        Battery life was also a challenge, as it seemed to be draining much faster with localization and path planning involved.
+                    </p>
+
+                    <p>
+                        As shown in the video, our localization at waypoints 2 and three were spot on, and our calculated trajectories worked out well. But between waypoints 3 and 4, and 4 and 5, we 
+                        calculated the correct orientation and distance but stopped short of our target. From here, it became more and more difficult to come up with realistic trajectories from point to point. However, 
+                        we are very proud of the fact that our localization was working really well. It did, however, take 40-60 seconds each time which was a bit annoying.
+                    </p>
+
+                    <p>The beliefs (blue) versus the true waypoints (green) are shown below.</p>
+                    <img src="images/Lab 12/full run sorta.png" alt = "Bayes Algo" width=80% />
+
+                    <iframe width="560" height="315" src="https://youtu.be/embed/UV2EXafbLC4"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Trying to fix our trajectories...</h3>
+
+                    <p>
+                        After the above video, we spent a long time trying to improve our mapping protocol and overal trajectories, to hopefully 
+                        improve the overall path planning. First, we added a reset-to-zero-degrees call to orientation control at the end of the mapping command 
+                        on the Arduino side, by turning the orientation flag to be true. This, however, unearthed other inconsistencies and redunancies throughout the code 
+                        which we also started trying to fix, such as counter variables being reset in multiple places. In the process of fixing the code, though, we were not able to finish 
+                        testing our full localization loop to see if our overall trajectory calculations were improved. Nonetheless, some arduino snippets are below. 
+                    </p>
+
+                    <script src="https://gist.github.com/nila-n/96a3628a001570e43cf9ae2ecf453988.js"></script>
+                    
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3>Discussion</h3>
+
+                    <p>
+                        Ultimately, this labs was one of the most satisfying, even if we did not get a full run in by the end. It combined PID with estimation and localization and felt 
+                        like a true culmination of work. I am grateful to Daria for being my partner, and for Jonathan and all the TAs for their amazing teaching!! So, thanks everyone!
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
