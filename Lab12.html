@@ -69,7 +69,7 @@
                 <div class="flex-grow-1">
                     <h3>Implementation</h3>
 
-                    <h2>Waypoint 1->2 + Open vs Closed Loop Control</h2>
+                    <h4>Waypoint 1->2 + Open vs Closed Loop Control</h4>
                     <p>We chose to hard code the motion between waypoint 1 and 2, because the exact angle and distance required is already known 
                         without localization. We used orientation control to turn 45 degrees and open loop control to drive forward to the next point.
                     </p>
@@ -82,7 +82,7 @@
                         control was actually better at handling inconsistencies than the proportional timing.
                     </p>
 
-                    <h2>Calculating Trajectory + Bayes Filter</h2>
+                    <h4>Calculating Trajectory + Bayes Filter</h4>
 
                     <p>
                         This was arguably the most important function of this lab. After localizing, the Bayes Filter would calculate a belief of the robot's location 
@@ -98,7 +98,7 @@
 
                     <script src="https://gist.github.com/nila-n/eb6bb699baf39b0ad208d419cd65125f.js"></script>
 
-                    <h2>Plan, Summarized</h2>
+                    <h4>Plan, Summarized</h4>
                     <p>
                         The plan, in pseudocode:
                     </p>
@@ -124,7 +124,7 @@
                         </code>
                     </pre>
                     
-                    <h2>Python Loop</h2>
+                    <h4>Python Loop</h4>
                     <p>
                         As python code, the above plan ended up like this:
                     </p>
