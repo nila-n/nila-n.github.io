@@ -49,7 +49,7 @@
             <p class="mb-5">The goal of this lab was to navigate an arena and go from waypoint to waypoint using localization and feedback controls.
             </p>
 
-            <h3>Shoutout to Daria! We worked together on this lab.</h3>
+            <h3>Shoutout to Daria! We worked together on this lab :D</h3>
 
             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
                 <div class="flex-grow-1">
@@ -104,26 +104,27 @@
                     <p>
                         The plan then became as follows, in pseudocode:
                     </p>
-
-                    <code>
-                        start
-                        orientation_pid(45 degrees)
-                        forward(to get to waypoint)
-
-                        now at waypoint 2
-                        while(there are still waypoints remaining){
-                            orientation_pid(return to 0 degrees)
-                            localize!
-
-                            (x_bar, y_bar) = run bayes filter update step
-                            (goal_x, goal_y) = next waypoint from list
-                            calculate_trajectory(current coords, goal coords)
-                            orientation_pid(face next waypoint)
+                    <pre>
+                        <code>
+                            start
+                            orientation_pid(45 degrees)
                             forward(to get to waypoint)
-                        }
-                        
-                        end, should be at origin!
-                    </code>
+    
+                            now at waypoint 2
+                            while(there are still waypoints remaining){
+                                orientation_pid(return to 0 degrees)
+                                localize!
+    
+                                (x_bar, y_bar) = run bayes filter update step
+                                (goal_x, goal_y) = next waypoint from list
+                                calculate_trajectory(current coords, goal coords)
+                                orientation_pid(face next waypoint)
+                                forward(to get to waypoint)
+                            }
+                            
+                            end, should be at origin!
+                        </code>
+                    </pre>
                     
                     <h2>Python Loop</h2>
                     <p>
